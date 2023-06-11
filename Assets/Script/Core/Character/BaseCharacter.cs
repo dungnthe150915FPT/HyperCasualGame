@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace Assets.Script.Core.Character
 {
-    public class BaseCharacter
+    public class BaseCharacter : IBaseCharacter
     {
         private string id;
         private string nameDisplay;
@@ -19,6 +19,7 @@ namespace Assets.Script.Core.Character
         private float attackDamage;
         private float attackSpeed;
         private float attackRange;
+
 
     }
 }

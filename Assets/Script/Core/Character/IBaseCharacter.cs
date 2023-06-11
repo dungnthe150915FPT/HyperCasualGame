@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Script.Core.Character
 {
-    public interface IBaseCharacter
+    internal interface IBaseCharacter
     {
 
     }
