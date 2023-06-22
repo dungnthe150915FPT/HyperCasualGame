@@ -52,5 +52,11 @@ namespace Assets.Script.Core.Library
         public static readonly string TAG_ENEMY = "Enemy";
         public static readonly string TAG_PROJECTILE = "Projectile";
         public static readonly string TAG_FLOOR = "Floor";
+
+
+        // scene name
+        public static readonly string SCENE_MAIN_MENU = "MainMenuScene";
+        public static readonly string SCENE_GAMEPLAY = "Gameplay";
+        public static readonly string SCENE_TEST = "TestScene";
     }
 }
