@@ -21,6 +21,7 @@ public class CharacterController : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private GameObject prefab;
     private PlayerInput playerInput;
+    private SpriteRenderer weaponSpriteRenderer;
 
     private Animator animator;
 
@@ -45,6 +46,31 @@ public class CharacterController : MonoBehaviour
 
         // Input Action
         setupInputAction();
+
+        // Weapon Renderer
+        setupWeaponRenderer();
+    }
+
+    private void setupWeaponRenderer()
+    {
+        // find child name Weapon of this game object
+        GameObject skeletal = prefab.transform.Find(PSB.SKELETON).gameObject;
+        GameObject boneRoot = skeletal.transform.Find(PSB.BONE_ROOT).gameObject;
+        GameObject weapon = boneRoot.transform.Find(PSB.BONE_PELVIS).gameObject
+            .transform.Find(PSB.BONE_SPINE_MIDDLE).gameObject
+            .transform.Find(PSB.BONE_SPINE_HIGHT).gameObject
+            .transform.Find(PSB.BONE_FRONT_ARM_UP).gameObject
+            .transform.Find(PSB.BONE_FRONT_ARM_DOWN).gameObject
+            .transform.Find(PSB.BONE_HOLD_WEAPON).gameObject
+            .transform.Find(PSB.BONE_WEAPON).gameObject;
+        weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
+
+
+        // CONST.WEAPON_SPRITE_PATH + CONST.WEAPON_SWORD
+        // change sprite from resources
+        weaponSpriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Empty");
+        Debug.Log(weaponSpriteRenderer.sprite.name);
+
     }
 
     private void setupInputAction()
@@ -74,15 +100,18 @@ public class CharacterController : MonoBehaviour
         // stop moving, set volicity to 0,-1
         if (character.IsInGround)
         {
-            Debug.Log("IsInGround");
-            for (int i = 0; i < 10; i++)
-            {
-                rigidbody.velocity = new Vector2(0, -1);
-            }
+            //Debug.Log("IsInGround");
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    rigidbody.velocity = new Vector2(0, -1);
+            //}
+            
+            // change rigidbody to kinematic
+            rigidbody.bodyType = RigidbodyType2D.Static;
         }
         else
         {
-            Debug.Log("IsNotInGround");
+            //Debug.Log("IsNotInGround");
             rigidbody.velocity = Vector2.zero;
         }
         character.CharacterState = CharacterState.Idle;
@@ -91,8 +120,10 @@ public class CharacterController : MonoBehaviour
 
     private void MoveStarted(InputAction.CallbackContext context)
     {
+        // set rigidbody to dynamic
+        rigidbody.bodyType = RigidbodyType2D.Dynamic;
         // log to console context.ReadValue<Vector2>()
-        Debug.Log(context.ReadValue<Vector2>());
+       // Debug.Log(context.ReadValue<Vector2>());
         if (character.IsInGround)
         {
             if (isLeftShiftHolding || Input.GetKey(KeyCode.LeftShift))
@@ -149,6 +180,7 @@ public class CharacterController : MonoBehaviour
         animator.Play("idle", 0, 0f);
         character.CharacterState = CharacterState.Idle;
         AnimatedLibrary.SetParameter(character.CharacterState, animator);
+
     }
 
     /// <summary>
