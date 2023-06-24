@@ -7,6 +7,7 @@ using Assets.Script.Core.Weapon;
 
 namespace Assets.Script.Core.Weapon
 {
+    [Serializable]
     public class BaseWeapon : IBaseWeapon
     {
         // identity

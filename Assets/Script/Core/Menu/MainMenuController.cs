@@ -5,6 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Assets.Script.Core.Library;
+using Assets.Script.Core.Weapon;
+using UnityEngine.Windows;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -46,17 +50,48 @@ public class MainMenuController : MonoBehaviour
 
     private void NewGame()
     {
-        throw new NotImplementedException();
+        GenerateConfig();
+    }
+
+    private void GenerateConfig()
+    {
+        BaseWeapon weapon = new BaseWeapon();
+        weapon.Id = "1";
+        weapon.NameDisplay = "AK-47";
+        weapon.AttackDamage = 10;
+        weapon.FireRate = 0.1f;
+        weapon.ReloadTime = 1;
+        weapon.SpreadAim = 0.1f;
+        weapon.Mass = 1;
+        weapon.AmmoTotal = 30;
+        weapon.AmmoCurrent = 0;
+        weapon.MoveSpeedMultiplier = 1.2f;
+        weapon.JumpSpeedpMultiplier = 1.5f;
+        weapon.WeaponType = WeaponEnum.EWeaponType.Rifle;
+        weapon.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        weapon.WeaponState = WeaponEnum.EWeaponState.Idle;
+
+        string myWeaponJson = JsonUtility.ToJson(weapon);
+        
     }
 
     private void ContinueGame()
     {
-        // load to scene TestScene
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(CONST.SCENE_TEST);
-        // Wait until the asynchronous scene fully loads
+        StartCoroutine(LoadSceneMode(CONST.SCENE_TEST));
+    }
+
+    private IEnumerator LoadSceneMode(string nameScene)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nameScene);
+        asyncLoad.allowSceneActivation = false;
         while (!asyncLoad.isDone)
         {
-            Debug.Log("Loading...");
+            Debug.Log("Loading scene " + nameScene + " " + (asyncLoad.progress * 100) + "%");
+            if (asyncLoad.progress >= 0.9f)
+            {
+                asyncLoad.allowSceneActivation = true;
+            }
+            yield return null;
         }
     }
 }
