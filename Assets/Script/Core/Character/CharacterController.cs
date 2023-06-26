@@ -12,9 +12,14 @@ using Mono.Cecil.Cil;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.XR;
 using UnityEngine.InputSystem.Controls;
+using Assets.Script.Core.Weapon;
+using BayatGames.SaveGameFree.Serializers;
+using BayatGames.SaveGameFree;
+using static WeaponEnum;
 
 public class CharacterController : MonoBehaviour
 {
+    // Start System
     private BaseCharacter character = new BaseCharacter();
     private new CapsuleCollider2D collider;
     private CapsuleCollider2D triggerCollider;
@@ -22,12 +27,17 @@ public class CharacterController : MonoBehaviour
     private GameObject prefab;
     private PlayerInput playerInput;
     private SpriteRenderer weaponSpriteRenderer;
-
     private Animator animator;
-
     private Vector2 previousVelocity;
-
     private CinemachineVirtualCamera virtualCamera;
+
+    // Combat System
+    private Inventory inventory;
+    private WeaponController currentWepController;
+    private int currentWeaponIndex;
+
+    [Header("Events")]
+    public GameEvent onFire;
 
     private bool isLeftShiftHolding = false;
     void Start()
@@ -49,6 +59,55 @@ public class CharacterController : MonoBehaviour
 
         // Weapon Renderer
         setupWeaponRenderer();
+
+        // Inventory
+        setupInventory();
+
+        // Weapon
+        setupWeapon();
+
+        // GamePlay UI
+        setupGamePlayUI();
+    }
+
+    private void setupGamePlayUI()
+    {
+        //GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
+        //GameObject gameplayUI = Instantiate(temp);
+        //gameplayUI.transform.SetParent(gameObject.transform);
+
+       // // get GamePlayUI script from child
+       // GamePlayUI gamePlayUI = gameplayUI.GetComponent<GamePlayUI>();
+       //// get GameEventListener script from child
+       // GameEventListener gameEventListener = gameplayUI.GetComponent<GameEventListener>();
+        
+        
+    }
+
+    private void setupWeapon()
+    {
+        currentWepController = gameObject.AddComponent<WeaponController>();
+        BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>(CONST.FILE_WEAPON_CONFIG, new BaseWeapon[0], new SaveGameJsonSerializer());
+
+        inventory.addWeapon(weapons[0]);
+        inventory.addWeapon(weapons[1]);
+        inventory.addWeapon(weapons[2]);
+
+        changeWeapon(0);
+    }
+
+    private void changeWeapon(int index)
+    {
+        onFire.Raise(this, "OMG");
+        currentWepController.WeaponStat = inventory.getWeapon(index);
+        inventory.setWeaponState(index, EWeaponState.Equipping);
+        currentWeaponIndex = index;
+        weaponSpriteRenderer.sprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath.ToString());
+        //Debug.Log("current weapon: " + currentWepController.WeaponStat.NameDisplay.ToString());
+    }
+    private void setupInventory()
+    {
+        inventory = Inventory.Instance;
     }
 
     private void setupWeaponRenderer()
@@ -72,7 +131,6 @@ public class CharacterController : MonoBehaviour
         Debug.Log(weaponSpriteRenderer.sprite.name);
 
     }
-
     private void setupInputAction()
     {
         playerInput = gameObject.AddComponent<PlayerInput>();
@@ -89,12 +147,32 @@ public class CharacterController : MonoBehaviour
         actionMapPlayer.FindAction(CONST.ACTION_RUN).started += RunStarted;
         actionMapPlayer.FindAction(CONST.ACTION_RUN).canceled += RunCanceled;
 
+        actionMapPlayer.FindAction(CONST.ACTION_SWITCH_WEAPON).performed += SwitchWeapon;
+
         playerInput.actions = inputActionAsset;
         playerInput.actions.Enable();
 
         previousVelocity = rigidbody.velocity;
     }
-
+    private void SwitchWeapon(InputAction.CallbackContext context)
+    {
+        // Log to see what key is pressed
+        //Debug.Log("SwitchWeapon: " + context.control.name);
+        KeyControl keyControl = (KeyControl)context.control;
+        int indexToSwitch = -1;
+        int length = inventory.getWeaponLength();
+        // get keycontrol of q and e
+        switch (context.control.name)
+        {
+            case "q":
+                indexToSwitch = currentWeaponIndex - 1 < 0 ? length - 1 : currentWeaponIndex - 1;
+                break;
+            case "e":
+                indexToSwitch = currentWeaponIndex + 1 >= length ? 0 : currentWeaponIndex + 1;
+                break;
+        }
+        changeWeapon(indexToSwitch);
+    }
     private void MoveCanceled(InputAction.CallbackContext context)
     {
         // stop moving, set volicity to 0,-1
@@ -105,7 +183,7 @@ public class CharacterController : MonoBehaviour
             //{
             //    rigidbody.velocity = new Vector2(0, -1);
             //}
-            
+
             // change rigidbody to kinematic
             rigidbody.bodyType = RigidbodyType2D.Static;
         }
@@ -117,13 +195,12 @@ public class CharacterController : MonoBehaviour
         character.CharacterState = CharacterState.Idle;
         AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
     }
-
     private void MoveStarted(InputAction.CallbackContext context)
     {
         // set rigidbody to dynamic
         rigidbody.bodyType = RigidbodyType2D.Dynamic;
         // log to console context.ReadValue<Vector2>()
-       // Debug.Log(context.ReadValue<Vector2>());
+        // Debug.Log(context.ReadValue<Vector2>());
         if (character.IsInGround)
         {
             if (isLeftShiftHolding || Input.GetKey(KeyCode.LeftShift))
@@ -143,18 +220,15 @@ public class CharacterController : MonoBehaviour
             rigidbody.velocity = context.ReadValue<Vector2>() * 2f;
         }
     }
-
     private void RunCanceled(InputAction.CallbackContext context)
     {
         isLeftShiftHolding = false;
     }
-
     private void RunStarted(InputAction.CallbackContext context)
     {
         // set isLeftShiftDown to true
         isLeftShiftHolding = true;
     }
-
     private void setupAnimated()
     {
         //load prefab from resources
@@ -182,18 +256,6 @@ public class CharacterController : MonoBehaviour
         AnimatedLibrary.SetParameter(character.CharacterState, animator);
 
     }
-
-    /// <summary>
-    /// Mass – Khối lượng của vật, không nên đặt chỉ số này cao hơn hoặc thấp hơn 100 lần so với các rigidbody khác.
-    /// Drag – Sức cản không khí sẽ ảnh hưởng đến object thế nào, 0 nghĩa là hoàn toàn không có sức cản, vô tận sẽ khiến cho object ngừng di chuyển.
-    /// Angular Drag – Sức cản không khỉ khi vật quay, lưu ý là không thể khiến object ngừng quay với angular drag vô tận.
-    /// Use Gravity – Nếu check, trọng lực sẽ được áp dụng lên object.
-    /// Is Kinematic – Nếu check, object sẽ không được điều khiển bởi engine vật lý mà chỉ có thể điều khiển bởi transform.
-    /// Interpolate – Dùng để điều chỉnh sự va chạm, độ va chạm có thể nhạy hơn tùy từng trường hợp.
-    /// Collision Detection – Dùng để ngăn chặn các object di chuyển quá nhanh xuyên qua các object khác mà không bị va chạm, 
-    /// như khi viên đạn di chuyển nhanh quá, và vượt qua object khác trước khi va chạm được update.
-    /// Ngoài ra RigidBody có thể được áp dụng lực trong code với function AddForce()
-    /// </summary>
     private void setupRigidBody()
     {
         rigidbody = gameObject.AddComponent<Rigidbody2D>();
@@ -201,7 +263,6 @@ public class CharacterController : MonoBehaviour
         rigidbody.angularDrag = 0;
 
     }
-
     private void setupColliderAndTrigger()
     {
         // add trigger collider
@@ -211,7 +272,6 @@ public class CharacterController : MonoBehaviour
         triggerCollider.isTrigger = true;
         triggerCollider.size = new Vector2(0.7f, 1.7f);
     }
-
     private void setupVirtualCamera()
     {
 
@@ -236,8 +296,6 @@ public class CharacterController : MonoBehaviour
         framingTrans.m_YDamping = 0;
         framingTrans.m_ZDamping = 0;
     }
-
-    // event enter trigger collider 2d 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == CONST.TAG_FLOOR)
@@ -249,8 +307,6 @@ public class CharacterController : MonoBehaviour
             animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
         }
     }
-
-    // event exit trigger collider 2d
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == CONST.TAG_FLOOR)
@@ -266,7 +322,6 @@ public class CharacterController : MonoBehaviour
             }
         }
     }
-
     void Update()
     {
         // lock rotation
@@ -277,7 +332,6 @@ public class CharacterController : MonoBehaviour
         //Debug.Log("Character State: " + character.CharacterState);
 
     }
-
     private void FixedUpdate()
     {
         Vector2 accelebration = rigidbody.velocity - previousVelocity;
@@ -305,12 +359,13 @@ public class CharacterController : MonoBehaviour
             character.CharacterState = CharacterState.Idle;
             AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
         }
-        if(character.IsInGround && Input.GetKey(KeyCode.LeftShift))
+        if (character.IsInGround && Input.GetKey(KeyCode.LeftShift))
         {
             if (rigidbody.velocity.x < 0)
             {
-                rigidbody.velocity = new Vector2(-1,0) * 20f;
-            } else if(rigidbody.velocity.x > 0)
+                rigidbody.velocity = new Vector2(-1, 0) * 20f;
+            }
+            else if (rigidbody.velocity.x > 0)
             {
                 rigidbody.velocity = new Vector2(1, 0) * 20f;
             }
@@ -327,7 +382,6 @@ public class CharacterController : MonoBehaviour
         //    AnimatedLibrary.SetParameter(CharacterState.Running, animator);
         //}
     }
-
     void onFaceSide()
     {
         if (rigidbody.velocity.x < 0)
@@ -342,7 +396,6 @@ public class CharacterController : MonoBehaviour
         }
 
     }
-
     void Jump(InputAction.CallbackContext ctx)
     {
         // check if character is in ground, if yes, set state to jumping

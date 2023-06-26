@@ -9,6 +9,8 @@ using Assets.Script.Core.Weapon;
 using UnityEngine.Windows;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using BayatGames.SaveGameFree.Serializers;
+using BayatGames.SaveGameFree;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -38,41 +40,58 @@ public class MainMenuController : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    public BaseWeapon[] listWeapon;
+
     private void Setting()
     {
-        throw new NotImplementedException();
+        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());
+        foreach (BaseWeapon weap in listWeapon)
+        {
+            Debug.Log(weap.NameDisplay);
+        }
     }
 
     private void LoadGame()
     {
-        throw new NotImplementedException();
+        weap = SaveGame.Load<BaseWeapon>("weapon", new BaseWeapon(), new SaveGameJsonSerializer());
+        Debug.Log(weap.NameDisplay);
+
+        FileInfo[] files = SaveGame.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            Debug.Log("file: "+file.Name);
+        }
+        // Log to path of saved game
+        Debug.Log(SaveGame.SavePath.ToString());
     }
 
     private void NewGame()
     {
         GenerateConfig();
     }
-
+    public BaseWeapon weap;
     private void GenerateConfig()
     {
-        BaseWeapon weapon = new BaseWeapon();
-        weapon.Id = "1";
-        weapon.NameDisplay = "AK-47";
-        weapon.AttackDamage = 10;
-        weapon.FireRate = 0.1f;
-        weapon.ReloadTime = 1;
-        weapon.SpreadAim = 0.1f;
-        weapon.Mass = 1;
-        weapon.AmmoTotal = 30;
-        weapon.AmmoCurrent = 0;
-        weapon.MoveSpeedMultiplier = 1.2f;
-        weapon.JumpSpeedpMultiplier = 1.5f;
-        weapon.WeaponType = WeaponEnum.EWeaponType.Rifle;
-        weapon.AmmoType = WeaponEnum.EAmmoType.Rifle;
-        weapon.WeaponState = WeaponEnum.EWeaponState.Idle;
+        weap.Id = "1";
+        weap.NameDisplay = "AK-47";
+        weap.AttackDamage = 10;
+        weap.FireRate = 0.1f;
+        weap.ReloadTime = 1;
+        weap.SpreadAim = 0.1f;
+        weap.Mass = 1;
+        weap.AmmoTotal = 30;
+        weap.AmmoCurrent = 0;
+        weap.MoveSpeedMultiplier = 1.2f;
+        weap.JumpSpeedpMultiplier = 1.5f;
+        weap.WeaponType = WeaponEnum.EWeaponType.Rifle;
+        weap.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        weap.WeaponState = WeaponEnum.EWeaponState.Idle;
 
-        string myWeaponJson = JsonUtility.ToJson(weapon);
-        
+        var jsonSerializer = new SaveGameJsonSerializer();
+        Debug.Log("weapon.name: " + weap.NameDisplay);
+        SaveGame.Save<BaseWeapon>("weapon", weap, jsonSerializer);
+
+       
     }
 
     private void ContinueGame()

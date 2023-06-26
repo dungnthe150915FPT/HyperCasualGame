@@ -15,7 +15,10 @@ namespace Assets.Script.Core.Library
         // Path to Assets Folder Resources
         public static readonly string ANIMATOR_CONTROLLER_PATH = "AnimatorControllers/Gun2New";
         public static readonly string PREFAB_ANIMATED_PATH = "Prefabs/Sakura";
+        public static readonly string PREFAB_GAMEPLAY_UI = "Prefabs/CanvasGamePlay";
 
+        // Config File JSON
+        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfig";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";
@@ -27,6 +30,7 @@ namespace Assets.Script.Core.Library
         public static readonly string ACTION_JUMP = "Jump";
         public static readonly string ACTION_RUN = "Run";
         public static readonly string ACTION_FIRE = "Fire";
+        public static readonly string ACTION_SWITCH_WEAPON = "SwitchWeapon";
 
 
         // Animator Controller Parameter
