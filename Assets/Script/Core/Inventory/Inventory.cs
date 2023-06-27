@@ -50,8 +50,8 @@ public class Inventory
 
     public BaseWeapon addWeapon(BaseWeapon baseWeapon)
     {
-        Debug.Log("add weapon");
-        Debug.Log("Length: " + weapons.Length);
+        //Debug.Log("add weapon");
+        //Debug.Log("Length: " + weapons.Length);
         BaseWeapon[] temp = new BaseWeapon[weapons.Length + 1];
         for (int i = 0; i < weapons.Length; i++)
         {

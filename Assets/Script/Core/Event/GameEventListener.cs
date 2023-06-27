@@ -25,16 +25,36 @@ public class GameEventListener : MonoBehaviour
 
     private void OnEnable()
     {
-        gameEvent.RegisterListener(this);
+        // for editor only
+        gameEvent?.RegisterListener(this);
     }
 
     private void OnDisable()
     {
-        gameEvent.UnregisterListener(this);
+        // for editor only
+        gameEvent?.UnregisterListener(this);
     }
 
     public void OnEventRaised(Component sender, object data)
     {
-        response.Invoke(sender, data);
+        response?.Invoke(sender, data);
+    }
+
+    // add listener event to response
+    public void AddListener(UnityAction<Component, object> action)
+    {
+        response?.AddListener(action);
+    }
+
+    public void OnGameEventListenerEnable()
+    {
+        // for runtime only
+        OnEnable();
+    }
+
+    public void OnGameEventListenerDisable()
+    {
+        // for runtime only
+        OnDisable();
     }
 }

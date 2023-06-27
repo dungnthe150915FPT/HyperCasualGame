@@ -16,6 +16,9 @@ using Assets.Script.Core.Weapon;
 using BayatGames.SaveGameFree.Serializers;
 using BayatGames.SaveGameFree;
 using static WeaponEnum;
+using System.Diagnostics.Tracing;
+using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class CharacterController : MonoBehaviour
 {
@@ -26,7 +29,7 @@ public class CharacterController : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private GameObject prefab;
     private PlayerInput playerInput;
-    private SpriteRenderer weaponSpriteRenderer;
+    public SpriteRenderer weaponSpriteRenderer;
     private Animator animator;
     private Vector2 previousVelocity;
     private CinemachineVirtualCamera virtualCamera;
@@ -36,9 +39,11 @@ public class CharacterController : MonoBehaviour
     private WeaponController currentWepController;
     private int currentWeaponIndex;
 
-    [Header("Events")]
-    public GameEvent onFire;
+    //[Header("Events")]
+    //public GameEvent onFire;
 
+    // Event
+    private GameEventListener eventListener;
     private bool isLeftShiftHolding = false;
     void Start()
     {
@@ -68,22 +73,53 @@ public class CharacterController : MonoBehaviour
 
         // GamePlay UI
         setupGamePlayUI();
-    }
 
+        // Event Listener
+        setupEventListener();
+    }
+    private void Awake()
+    {
+
+    }
+    private void OnEnable()
+    {
+
+    }
+    private void OnDisable()
+    {
+
+    }
+    private void addEventListener(string eventName, UnityAction<Component, object> callback)
+    {
+        GameEventListener eventListener = gameObject.AddComponent<GameEventListener>();
+        GameEvent onInputEvent = Resources.Load<GameEvent>(eventName);
+        eventListener.gameEvent = onInputEvent;
+        eventListener.OnGameEventListenerEnable();
+        CustomGameEvent eve = new CustomGameEvent();
+        eve.AddListener(callback);
+        eventListener.response = eve;
+    }
+    private void setupEventListener()
+    {
+        addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
+        addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
+    }
+    public void OnFire(Component sender, object data)
+    {
+        if (data is string) Debug.Log("Hello in UI: " + (string)data);
+        else Debug.Log("OnEventRaised in UI");
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
+    }
+    public void OnSwitchWeapon(Component sender, object data)
+    {
+        changeWeapon(currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1);
+    }
     private void setupGamePlayUI()
     {
-        //GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
-        //GameObject gameplayUI = Instantiate(temp);
-        //gameplayUI.transform.SetParent(gameObject.transform);
-
-       // // get GamePlayUI script from child
-       // GamePlayUI gamePlayUI = gameplayUI.GetComponent<GamePlayUI>();
-       //// get GameEventListener script from child
-       // GameEventListener gameEventListener = gameplayUI.GetComponent<GameEventListener>();
-        
-        
+        GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
+        GameObject gameplayUI = Instantiate(temp);
+        gameplayUI.transform.SetParent(gameObject.transform);
     }
-
     private void setupWeapon()
     {
         currentWepController = gameObject.AddComponent<WeaponController>();
@@ -95,15 +131,15 @@ public class CharacterController : MonoBehaviour
 
         changeWeapon(0);
     }
-
     private void changeWeapon(int index)
     {
-        onFire.Raise(this, "OMG");
         currentWepController.WeaponStat = inventory.getWeapon(index);
         inventory.setWeaponState(index, EWeaponState.Equipping);
         currentWeaponIndex = index;
-        weaponSpriteRenderer.sprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath.ToString());
-        //Debug.Log("current weapon: " + currentWepController.WeaponStat.NameDisplay.ToString());
+
+        Sprite currentwepSprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath);
+        weaponSpriteRenderer.sprite = currentwepSprite;
+
     }
     private void setupInventory()
     {
@@ -113,22 +149,19 @@ public class CharacterController : MonoBehaviour
     private void setupWeaponRenderer()
     {
         // find child name Weapon of this game object
-        GameObject skeletal = prefab.transform.Find(PSB.SKELETON).gameObject;
-        GameObject boneRoot = skeletal.transform.Find(PSB.BONE_ROOT).gameObject;
-        GameObject weapon = boneRoot.transform.Find(PSB.BONE_PELVIS).gameObject
-            .transform.Find(PSB.BONE_SPINE_MIDDLE).gameObject
-            .transform.Find(PSB.BONE_SPINE_HIGHT).gameObject
-            .transform.Find(PSB.BONE_FRONT_ARM_UP).gameObject
-            .transform.Find(PSB.BONE_FRONT_ARM_DOWN).gameObject
-            .transform.Find(PSB.BONE_HOLD_WEAPON).gameObject
-            .transform.Find(PSB.BONE_WEAPON).gameObject;
-        weaponSpriteRenderer = weapon.GetComponent<SpriteRenderer>();
-
-
+        weaponSpriteRenderer = prefab.transform.Find(PSB.SKELETON)
+            .transform.Find(PSB.BONE_ROOT)
+            .transform.Find(PSB.BONE_PELVIS)
+            .transform.Find(PSB.BONE_SPINE_MIDDLE)
+            .transform.Find(PSB.BONE_SPINE_HIGHT)
+            .transform.Find(PSB.BONE_FRONT_ARM_UP)
+            .transform.Find(PSB.BONE_FRONT_ARM_DOWN)
+            .transform.Find(PSB.BONE_HOLD_WEAPON)
+            .transform.Find(PSB.BONE_WEAPON).GetComponent<SpriteRenderer>();
         // CONST.WEAPON_SPRITE_PATH + CONST.WEAPON_SWORD
         // change sprite from resources
         weaponSpriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Empty");
-        Debug.Log(weaponSpriteRenderer.sprite.name);
+        //Debug.Log(weaponSpriteRenderer.sprite.name);
 
     }
     private void setupInputAction()
@@ -171,7 +204,7 @@ public class CharacterController : MonoBehaviour
                 indexToSwitch = currentWeaponIndex + 1 >= length ? 0 : currentWeaponIndex + 1;
                 break;
         }
-        changeWeapon(indexToSwitch);
+        //changeWeapon(indexToSwitch);
     }
     private void MoveCanceled(InputAction.CallbackContext context)
     {
@@ -232,10 +265,10 @@ public class CharacterController : MonoBehaviour
     private void setupAnimated()
     {
         //load prefab from resources
-        prefab = Resources.Load<GameObject>(CONST.PREFAB_ANIMATED_PATH);
+        GameObject prefabLoad = Resources.Load<GameObject>(CONST.PREFAB_ANIMATED_PATH);
 
         // create an instance of prefab and add it to child of this gameobject
-        GameObject instanceAnimated = Instantiate(prefab, transform.position, Quaternion.identity);
+        GameObject instanceAnimated = Instantiate(prefabLoad, transform.position, Quaternion.identity);
 
         instanceAnimated.transform.position =
             new Vector3(transform.position.x,
@@ -247,6 +280,7 @@ public class CharacterController : MonoBehaviour
         AnimatorController animatorController = Resources.Load<AnimatorController>(CONST.ANIMATOR_CONTROLLER_PATH);
 
         animator = instanceAnimated.GetComponent<Animator>();
+        prefab = instanceAnimated;
         // set animator controller to animator
         animator.runtimeAnimatorController = animatorController;
 
