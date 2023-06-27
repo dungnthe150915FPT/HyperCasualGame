@@ -36,9 +36,13 @@ namespace Assets.Script.Core.Weapon
         private WeaponEnum.EWeaponType weaponType;
         private WeaponEnum.EAmmoType ammoType;
         private WeaponEnum.EWeaponState weaponState;
+        private WeaponEnum.EFireMode[] fireMode;
 
         // constructor
-        public BaseWeapon(string id, string nameDisplay, string spritePath, float attackDamage, float fireRate, float reloadTime, float spreadAim, float mass, int ammoTotal, int ammoCurrent, float moveSpeedMultiplier, float jumpSpeedpMultiplier, WeaponEnum.EWeaponType weaponType, WeaponEnum.EAmmoType ammoType, WeaponEnum.EWeaponState weaponState)
+        public BaseWeapon(string id, string nameDisplay, string spritePath, float attackDamage, float fireRate, 
+            float reloadTime, float spreadAim, float mass, int ammoTotal, int ammoCurrent, float moveSpeedMultiplier, 
+            float jumpSpeedpMultiplier, WeaponEnum.EWeaponType weaponType, WeaponEnum.EAmmoType ammoType, 
+            WeaponEnum.EWeaponState weaponState, WeaponEnum.EFireMode[] fireMode)
         {
             this.id = id;
             this.nameDisplay = nameDisplay;
@@ -55,7 +59,7 @@ namespace Assets.Script.Core.Weapon
             this.weaponType = weaponType;
             this.ammoType = ammoType;
             this.weaponState = weaponState;
-
+            this.fireMode = fireMode;
         }
 
 
@@ -77,6 +81,7 @@ namespace Assets.Script.Core.Weapon
         public WeaponEnum.EWeaponType WeaponType { get; set; }
         public WeaponEnum.EAmmoType AmmoType { get; set; }
         public WeaponEnum.EWeaponState WeaponState { get; set; }
+        public WeaponEnum.EFireMode[] FireMode { get; set; }
 
     }
 }

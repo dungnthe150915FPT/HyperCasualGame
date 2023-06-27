@@ -19,6 +19,7 @@ using static WeaponEnum;
 using System.Diagnostics.Tracing;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
+using static WeaponController;
 
 public class CharacterController : MonoBehaviour
 {
@@ -77,17 +78,10 @@ public class CharacterController : MonoBehaviour
         // Event Listener
         setupEventListener();
     }
-    private void Awake()
+    private void setupEventListener()
     {
-
-    }
-    private void OnEnable()
-    {
-
-    }
-    private void OnDisable()
-    {
-
+        addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
+        addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
     }
     private void addEventListener(string eventName, UnityAction<Component, object> callback)
     {
@@ -99,17 +93,22 @@ public class CharacterController : MonoBehaviour
         eve.AddListener(callback);
         eventListener.response = eve;
     }
-    private void setupEventListener()
-    {
-        addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
-        addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
-    }
+
     public void OnFire(Component sender, object data)
     {
         if (data is string) Debug.Log("Hello in UI: " + (string)data);
         else Debug.Log("OnEventRaised in UI");
-        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_AUTO);
+
+        currentWepController.OnFire(ResultGet);
     }
+
+    private void ResultGet(Component sender, object data)
+    {
+       //Log sender and data
+       Debug.Log("Sender: " + sender + " Data: " + data);
+    }
+
     public void OnSwitchWeapon(Component sender, object data)
     {
         changeWeapon(currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1);

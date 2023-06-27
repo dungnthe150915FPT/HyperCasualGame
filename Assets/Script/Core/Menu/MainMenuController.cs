@@ -73,7 +73,8 @@ public class MainMenuController : MonoBehaviour
     private void GenerateConfig()
     {
         weap.Id = "1";
-        weap.NameDisplay = "AK-47";
+        weap.NameDisplay = "ACM";
+        weap.SpritePath = "Sprites/Weapons/Guns/AR/ACM";
         weap.AttackDamage = 10;
         weap.FireRate = 0.1f;
         weap.ReloadTime = 1;
@@ -86,10 +87,14 @@ public class MainMenuController : MonoBehaviour
         weap.WeaponType = WeaponEnum.EWeaponType.Rifle;
         weap.AmmoType = WeaponEnum.EAmmoType.Rifle;
         weap.WeaponState = WeaponEnum.EWeaponState.Idle;
-
+        // fire mode have single and auto
+        WeaponEnum.EFireMode[] fir = new WeaponEnum.EFireMode[2];
+        fir[0] = WeaponEnum.EFireMode.Single;
+        fir[1] = WeaponEnum.EFireMode.Auto;
+        weap.FireMode = fir;
         var jsonSerializer = new SaveGameJsonSerializer();
         Debug.Log("weapon.name: " + weap.NameDisplay);
-        SaveGame.Save<BaseWeapon>("weapon", weap, jsonSerializer);
+        SaveGame.Save<BaseWeapon>("WeaponConfig", weap, jsonSerializer);
 
        
     }
