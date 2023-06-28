@@ -30,7 +30,7 @@ public class CharacterController : MonoBehaviour
     private new Rigidbody2D rigidbody;
     private GameObject prefab;
     private PlayerInput playerInput;
-    public SpriteRenderer weaponSpriteRenderer;
+    private SpriteRenderer weaponSpriteRenderer;
     private Animator animator;
     private Vector2 previousVelocity;
     private CinemachineVirtualCamera virtualCamera;
@@ -39,6 +39,7 @@ public class CharacterController : MonoBehaviour
     private Inventory inventory;
     private WeaponController currentWepController;
     private int currentWeaponIndex;
+    private GameObject weaponHand;
 
     //[Header("Events")]
     //public GameEvent onFire;
@@ -98,15 +99,15 @@ public class CharacterController : MonoBehaviour
     {
         if (data is string) Debug.Log("Hello in UI: " + (string)data);
         else Debug.Log("OnEventRaised in UI");
-        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_AUTO);
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
 
-        currentWepController.OnFire(ResultGet);
+        currentWepController.OnFire(ResultGet, weaponHand);
     }
 
     private void ResultGet(Component sender, object data)
     {
-       //Log sender and data
-       Debug.Log("Sender: " + sender + " Data: " + data);
+        if (data is string) Debug.Log("ResultGet: " + (string)data);
+        else Debug.Log("ResultGet");
     }
 
     public void OnSwitchWeapon(Component sender, object data)
@@ -118,6 +119,9 @@ public class CharacterController : MonoBehaviour
         GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
         GameObject gameplayUI = Instantiate(temp);
         gameplayUI.transform.SetParent(gameObject.transform);
+        //UnityEngine.Cursor.lockState = CursorLockMode.Confined; // keep confined in the game window
+
+
     }
     private void setupWeapon()
     {
@@ -147,8 +151,8 @@ public class CharacterController : MonoBehaviour
 
     private void setupWeaponRenderer()
     {
-        // find child name Weapon of this game object
-        weaponSpriteRenderer = prefab.transform.Find(PSB.SKELETON)
+        weaponHand = new GameObject();
+        weaponHand = prefab.transform.Find(PSB.SKELETON)
             .transform.Find(PSB.BONE_ROOT)
             .transform.Find(PSB.BONE_PELVIS)
             .transform.Find(PSB.BONE_SPINE_MIDDLE)
@@ -156,7 +160,9 @@ public class CharacterController : MonoBehaviour
             .transform.Find(PSB.BONE_FRONT_ARM_UP)
             .transform.Find(PSB.BONE_FRONT_ARM_DOWN)
             .transform.Find(PSB.BONE_HOLD_WEAPON)
-            .transform.Find(PSB.BONE_WEAPON).GetComponent<SpriteRenderer>();
+            .transform.Find(PSB.BONE_WEAPON).gameObject;
+        // find child name Weapon of this game object
+        weaponSpriteRenderer = weaponHand.GetComponent<SpriteRenderer>();
         // CONST.WEAPON_SPRITE_PATH + CONST.WEAPON_SWORD
         // change sprite from resources
         weaponSpriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Empty");
@@ -181,11 +187,19 @@ public class CharacterController : MonoBehaviour
 
         actionMapPlayer.FindAction(CONST.ACTION_SWITCH_WEAPON).performed += SwitchWeapon;
 
+        actionMapPlayer.FindAction("Fire").performed += Fire;
+
         playerInput.actions = inputActionAsset;
         playerInput.actions.Enable();
 
         previousVelocity = rigidbody.velocity;
     }
+
+    private void Fire(InputAction.CallbackContext context)
+    {
+        OnFire(this, "F");
+    }
+
     private void SwitchWeapon(InputAction.CallbackContext context)
     {
         // Log to see what key is pressed
@@ -292,9 +306,11 @@ public class CharacterController : MonoBehaviour
     private void setupRigidBody()
     {
         rigidbody = gameObject.AddComponent<Rigidbody2D>();
+        //rigidbody.bodyType = RigidbodyType2D.Static;
         rigidbody.mass = 1;
         rigidbody.angularDrag = 0;
-
+        gameObject.tag = CONST.TAG_PLAYER;
+        gameObject.layer = LayerMask.NameToLayer(CONST.LAYER_PLAYER);
     }
     private void setupColliderAndTrigger()
     {

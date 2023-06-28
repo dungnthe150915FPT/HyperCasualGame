@@ -82,6 +82,13 @@ namespace Assets.Script.Core.Library
             , TAG_PROJECTILE = "Projectile"
             , TAG_FLOOR = "Floor";
 
+        // game object layer
+        public static readonly string 
+            LAYER_PLAYER = "Player"
+            , LAYER_ENEMY = "Enemy"
+            , LAYER_PROJECTILE = "Projectile"
+            , LAYER_FLOOR = "Floor";
+
         // scene name
         public static readonly string 
             SCENE_MAIN_MENU = "MainMenuScene"
