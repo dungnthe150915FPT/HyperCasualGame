@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,6 +52,7 @@ namespace Assets.Script.Core.Character
         public CharacterState CharacterState { get => characterState; set => characterState = value; }
         public bool IsInGround { get => isInGround; set => isInGround = value; }
         public bool IsAccelerating { get => isAccelerating; set => isAccelerating = value; }
-    
+
+
     }
 }

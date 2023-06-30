@@ -2,6 +2,7 @@ using Assets.Script.Core.Library;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,28 +11,46 @@ using UnityEngine.UI;
 
 public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public DynamicJoystick joystick;
+    public TextMeshProUGUI txtDebug;
     private Button btnFire;
     private Button btnSwitchWepPre;
+    private Button btnJump;
+    private Button btnRun;
 
     [Header("Events")]
     private GameEvent onFire;
     private GameEvent onSwitchWepPre;
+    private GameEvent onMove;
+    private GameEvent onJump;
+    private GameEvent onRun;
     void Start()
     {
         btnFire = GameObject.Find(CONST.UI_COMPONENT_NAME_BTN_FIRE).GetComponent<Button>();
         btnSwitchWepPre = GameObject.Find(CONST.UI_COMPONENT_NAME_BTN_SWITCH_WEP_PRE).GetComponent<Button>();
+        btnJump = GameObject.Find(CONST.UI_COMPONENT_NAME_BTN_JUMP).GetComponent<Button>();
         setupButtons();
         setupEvents();
+        setupJoyStick();
+    }
+
+    private void setupJoyStick()
+    {
+
     }
 
     private void setupEvents()
     {
         onFire = Resources.Load<GameEvent>(CONST.PATH_EVENT_FIRE);
         onSwitchWepPre = Resources.Load<GameEvent>(CONST.PATH_EVENT_SWITCH_WEAPON);
+        onMove = Resources.Load<GameEvent>("Events/MoveEvent");
+        onJump = Resources.Load<GameEvent>("Events/JumpEvent");
+        onRun = Resources.Load<GameEvent>("Events/RunEvent");
 
     }
 
     private EventTrigger firee;
+    private EventTrigger jump;
     private float holdFireTime = 0f;
     private void setupButtons()
     {
@@ -48,6 +67,36 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         firee.triggers.Add(entry);
 
         btnSwitchWepPre.onClick.AddListener(SwitchWeaponPre);
+
+        //btnJump.onClick.AddListener(Jump);
+
+        jump = btnJump.AddComponent<EventTrigger>();
+        EventTrigger.Entry entry2 = new EventTrigger.Entry();
+        entry2.eventID = EventTriggerType.PointerDown;
+        entry2.callback.AddListener((data) => { Jump(); });   
+        jump.triggers.Add(entry2);
+        // point up
+        EventTrigger.Entry entry3 = new EventTrigger.Entry();
+        entry3.eventID = EventTriggerType.PointerUp;
+        entry3.callback.AddListener((data) => { StopJump(); });
+        jump.triggers.Add(entry3);
+
+        //btnRun.onClick.AddListener(Run);
+    }
+
+    private void StopJump()
+    {
+        Debug.Log("StopJump");
+    }
+
+    private void Run()
+    {
+        onRun.Raise(this, "PATH_EVENT_RUN");
+    }
+
+    private void Jump()
+    {
+        onJump.Raise(this, "PATH_EVENT_JUMP");
     }
 
     private void SwitchWeaponPre()
@@ -59,11 +108,11 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         onFire.Raise(this, "FromGameplayUI");
         isFiring = true;
-        Debug.Log("Raise Fire");
     }
     private void StopFire()
     {
         isFiring = false;
+        Debug.Log("StopFire");
     }
 
     void Update()
@@ -73,6 +122,7 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         if (isFiring) holdFireTime += Time.deltaTime;
         else holdFireTime = 0f;
+        onMove.Raise(this, joystick.Direction);
         ///Debug.Log("isFiring: " + isFiring + ": holdFire: " + holdFireTime);
     }
     public void OnPointerDown(PointerEventData eventData)

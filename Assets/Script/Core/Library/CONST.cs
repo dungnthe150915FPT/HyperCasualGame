@@ -16,7 +16,15 @@ namespace Assets.Script.Core.Library
         public static readonly string 
             ANIMATOR_CONTROLLER_PATH = "AnimatorControllers/Gun2New"
             , PREFAB_ANIMATED_PATH = "Prefabs/Sakura"
-            , PREFAB_GAMEPLAY_UI = "Prefabs/CanvasGamePlay";
+            , PREFAB_GAMEPLAY_UI = "Prefabs/UIGamePlay/CanvasGamePlay"
+            , PREFAB_BULLET_PATH = "Prefabs/Bullets/Bullet";
+
+        // Object name
+        public static readonly string 
+            OBJECT_NAME_PLAYER = "Player"
+            , OBJECT_NAME_BULLET = "Bullet"
+            , OBJECT_MUZZLE_EXTRACTOR = "MuzzleExtractor"
+            , OBJECT_SHELL_EXTRACTOR = "ShellExtractor";
 
         // Events
         public static readonly string 
@@ -30,7 +38,8 @@ namespace Assets.Script.Core.Library
         public static readonly string 
             UI_COMPONENT_NAME_BTN_FIRE = "btnFire"
             , UI_COMPONENT_NAME_BTN_SWITCH_WEP_PRE = "btnSwitchWepPre"
-            , UI_COMPONENT_NAME_BTN_SWITCH_WEP_NEXT = "btnSwitchWepNext";
+            , UI_COMPONENT_NAME_BTN_SWITCH_WEP_NEXT = "btnSwitchWepNext"
+            , UI_COMPONENT_NAME_BTN_JUMP = "btnJump";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";
@@ -93,6 +102,6 @@ namespace Assets.Script.Core.Library
         public static readonly string 
             SCENE_MAIN_MENU = "MainMenuScene"
             , SCENE_GAMEPLAY = "Gameplay"
-            , SCENE_TEST = "TestScene";
+            , SCENE_TEST = "TestGamePlay";
     }
 }
