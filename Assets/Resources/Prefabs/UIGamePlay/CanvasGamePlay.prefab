@@ -308,7 +308,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -42, y: 80}
-  m_SizeDelta: {x: 190.7042, y: 200.6596}
+  m_SizeDelta: {x: 380, y: 400}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &1714688276347485052
 CanvasRenderer:
@@ -427,10 +427,10 @@ RectTransform:
   m_Father: {fileID: 6877135462999282917}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 337, y: -457}
-  m_SizeDelta: {x: 132.2018, y: 105.2866}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -477, y: 112}
+  m_SizeDelta: {x: 132.20178, y: 105.28659}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1886400159866444878
 CanvasRenderer:
@@ -549,10 +549,10 @@ RectTransform:
   m_Father: {fileID: 6877135462999282917}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 209.31311, y: -171.8323}
-  m_SizeDelta: {x: 130.6263, y: 55.5872}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -507, y: 293}
+  m_SizeDelta: {x: 130.62628, y: 55.58719}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2816703812834509132
 CanvasRenderer:
@@ -806,10 +806,10 @@ RectTransform:
   m_Father: {fileID: 6877135462999282917}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 477, y: 39.095}
-  m_SizeDelta: {x: 127.0957, y: 62.9043}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -237, y: 479}
+  m_SizeDelta: {x: 127.0957, y: 62.904297}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7273482197389622287
 CanvasRenderer:
@@ -973,11 +973,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 16
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1440, y: 720}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -1271,8 +1271,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

@@ -16,6 +16,6 @@ public class AttackablePoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("I have been hit.");
+       // Debug.Log("I have been hit.");
     }
 }

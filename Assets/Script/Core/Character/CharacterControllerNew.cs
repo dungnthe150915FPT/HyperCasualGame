@@ -65,6 +65,7 @@ public class CharacterControllerNew : MonoBehaviour
     private void setupEventListeners()
     {
         addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
+        addEventListener("Events/StopFireEvent", OnFireStop);
         addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
         addEventListener("Events/MoveEvent", OnMove);
         addEventListener("Events/JumpEvent", OnJump);
@@ -78,6 +79,7 @@ public class CharacterControllerNew : MonoBehaviour
 
     private void OnJump(Component sender, object data)
     {
+        Debug.Log("Run");
         rigidbody.AddForce(Vector2.up * 50f, ForceMode2D.Impulse);
     }
 
@@ -96,7 +98,7 @@ public class CharacterControllerNew : MonoBehaviour
         onFaceSide(vector);
         setWeaponAngle(vector);
 
-        rigidbody.velocity = new Vector2(vector.x * 10f, 0);
+        rigidbody.velocity = new Vector2(vector.x * 10f, rigidbody.velocity.y);
         character.CharacterState = CharacterState.Walking;
         AnimatedLibrary.SetParameter(character.CharacterState, animator);
     }
@@ -109,7 +111,12 @@ public class CharacterControllerNew : MonoBehaviour
         animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
 
         currentWepController.OnFire(ResultGet, weaponHand);
-        rigidbody.AddForce(Vector2.up * 50f, ForceMode2D.Impulse);
+    }
+
+    // stop fire
+    private void OnFireStop(Component sender, object data)
+    {
+        currentWepController.OnFireStop();
     }
     private void ResultGet(Component sender, object data)
     {
@@ -120,7 +127,7 @@ public class CharacterControllerNew : MonoBehaviour
     }
     private void OnSwitchWeapon(Component sender, object data)
     {
-        Debug.Log("Switch Weapon");
+        changeWeapon(currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1);
     }
     private void addEventListener(string eventName, UnityAction<Component, object> callback)
     {
@@ -147,11 +154,12 @@ public class CharacterControllerNew : MonoBehaviour
         inventory.addWeapon(weapons[1]);
         inventory.addWeapon(weapons[2]);
 
-        changeWeapon(0);
+        changeWeapon(1);
     }
     private void changeWeapon(int index)
     {
         currentWepController.WeaponStat = inventory.getWeapon(index);
+        currentWepController.setupWeapon(weaponHand);
         inventory.setWeaponState(index, EWeaponState.Equipping);
         currentWeaponIndex = index;
         Sprite currentwepSprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath);

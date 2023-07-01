@@ -20,6 +20,7 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     [Header("Events")]
     private GameEvent onFire;
+    private GameEvent onStopFire;
     private GameEvent onSwitchWepPre;
     private GameEvent onMove;
     private GameEvent onJump;
@@ -42,6 +43,7 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void setupEvents()
     {
         onFire = Resources.Load<GameEvent>(CONST.PATH_EVENT_FIRE);
+        onStopFire = Resources.Load<GameEvent>("Events/StopFireEvent");
         onSwitchWepPre = Resources.Load<GameEvent>(CONST.PATH_EVENT_SWITCH_WEAPON);
         onMove = Resources.Load<GameEvent>("Events/MoveEvent");
         onJump = Resources.Load<GameEvent>("Events/JumpEvent");
@@ -73,7 +75,7 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         jump = btnJump.AddComponent<EventTrigger>();
         EventTrigger.Entry entry2 = new EventTrigger.Entry();
         entry2.eventID = EventTriggerType.PointerDown;
-        entry2.callback.AddListener((data) => { Jump(); });   
+        entry2.callback.AddListener((data) => { Jump(); });
         jump.triggers.Add(entry2);
         // point up
         EventTrigger.Entry entry3 = new EventTrigger.Entry();
@@ -111,6 +113,7 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void StopFire()
     {
+        onStopFire.Raise(this, "FromGameplayUI");
         isFiring = false;
         Debug.Log("StopFire");
     }
@@ -120,10 +123,12 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     private void FixedUpdate()
     {
-        if (isFiring) holdFireTime += Time.deltaTime;
+        if (isFiring) holdFireTime += Time.fixedDeltaTime;
         else holdFireTime = 0f;
         onMove.Raise(this, joystick.Direction);
-        ///Debug.Log("isFiring: " + isFiring + ": holdFire: " + holdFireTime);
+        if (isFiring && holdFireTime == 0) Fire();
+        if (isFiring && holdFireTime > 0.05f) Fire();
+        //Debug.Log("isFiring: " + isFiring + ": holdFire: " + holdFireTime);
     }
     public void OnPointerDown(PointerEventData eventData)
     {
