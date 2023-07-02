@@ -34,23 +34,20 @@ public class MainMenuController : MonoBehaviour
         btnSetting.onClick.AddListener(Setting);
         btnQuit.onClick.AddListener(QuitGame);
     }
-
     private void QuitGame()
     {
-        throw new NotImplementedException();
+        // stop game
+        Application.Quit();
     }
-
     public BaseWeapon[] listWeapon;
-
     private void Setting()
     {
-        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());
+        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
         foreach (BaseWeapon weap in listWeapon)
         {
             Debug.Log(weap.NameDisplay);
         }
     }
-
     private void LoadGame()
     {
         BaseWeapon weap = new BaseWeapon();
@@ -67,12 +64,36 @@ public class MainMenuController : MonoBehaviour
         // Log to path of saved game
         Debug.Log(SaveGame.SavePath.ToString());
     }
-
     private void NewGame()
     {
         GenerateConfig();
     }
     private void GenerateConfig()
+    {
+        generateWeapons();
+        //generateInventory();
+    }
+
+    private Inventory inventory = new Inventory();
+    private void generateInventory()
+    {
+        List<BaseWeapon> newListWeapon = new List<BaseWeapon>();
+        Inventory inventory = new Inventory();
+        var jsonSerializer = new SaveGameJsonSerializer();
+        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
+        foreach (BaseWeapon weap in listWeapon)
+        {
+            Debug.Log(weap.NameDisplay);
+            newListWeapon.Add(weap);
+        }
+        inventory.Weapons = newListWeapon;
+
+        Debug.Log("newListWeapon: " + inventory.Weapons.Count);
+        SaveGame.Save<Inventory>("Weapo", inventory, new SaveGameJsonSerializer());
+
+    }
+
+    private void generateWeapons()
     {
         BaseWeapon weap = new BaseWeapon();
         weap.Id = "1";
@@ -86,8 +107,8 @@ public class MainMenuController : MonoBehaviour
         weap.ReloadTime = 1;
         weap.SpreadAim = 0.1f;
         weap.Mass = 1;
-        weap.AmmoTotal = 30;
-        weap.AmmoCurrent = 0;
+        weap.AmmoMax = 30;
+        weap.AmmoCurrent = 30;
         weap.MoveSpeedMultiplier = 1.2f;
         weap.JumpSpeedpMultiplier = 1.5f;
         weap.WeaponType = WeaponEnum.EWeaponType.Rifle;
@@ -104,16 +125,16 @@ public class MainMenuController : MonoBehaviour
         hp416.Id = "2";
         hp416.NameDisplay = "HP416";
         hp416.SpritePath = "Sprites/Weapons/Guns/AR/HP416";
-        hp416.ShellExtractor = new Vector2(0.1f, 0.1f);
-        hp416.MuzzleExtractor = new Vector2(0.1f, 0.1f);
+        hp416.ShellExtractor = new Vector2(0.137f, 0.218f);
+        hp416.MuzzleExtractor = new Vector2(1.22f, 0.203f);
         hp416.BulletSpeed = 1000f;
         hp416.AttackDamage = 10;
         hp416.FireRate = 0.1f;
         hp416.ReloadTime = 1;
         hp416.SpreadAim = 0.1f;
         hp416.Mass = 1;
-        hp416.AmmoTotal = 30;
-        hp416.AmmoCurrent = 0;
+        hp416.AmmoMax = 30;
+        hp416.AmmoCurrent = 30;
         hp416.MoveSpeedMultiplier = 1.2f;
         hp416.JumpSpeedpMultiplier = 1.5f;
         hp416.WeaponType = WeaponEnum.EWeaponType.Rifle;
@@ -125,16 +146,16 @@ public class MainMenuController : MonoBehaviour
         auc.Id = "3";
         auc.NameDisplay = "AUC";
         auc.SpritePath = "Sprites/Weapons/Guns/AR/AUC";
-        auc.ShellExtractor = new Vector2(0.1f, 0.1f);
-        auc.MuzzleExtractor = new Vector2(0.1f, 0.1f);
+        auc.ShellExtractor = new Vector2(0.137f, 0.218f);
+        auc.MuzzleExtractor = new Vector2(0.967f, 0.211f);
         auc.BulletSpeed = 1000f;
         auc.AttackDamage = 10;
         auc.FireRate = 0.1f;
         auc.ReloadTime = 1;
         auc.SpreadAim = 0.1f;
         auc.Mass = 1;
-        auc.AmmoTotal = 30;
-        auc.AmmoCurrent = 0;
+        auc.AmmoMax = 30;
+        auc.AmmoCurrent = 30;
         auc.MoveSpeedMultiplier = 1.2f;
         auc.JumpSpeedpMultiplier = 1.5f;
         auc.WeaponType = WeaponEnum.EWeaponType.Rifle;
@@ -148,14 +169,12 @@ public class MainMenuController : MonoBehaviour
         listWeap[2] = auc;
 
         SaveGame.Save<BaseWeapon[]>("WeaponConfigTest", listWeap, jsonSerializer);
-
     }
 
     private void ContinueGame()
     {
         StartCoroutine(LoadSceneMode(CONST.SCENE_TEST));
     }
-
     private IEnumerator LoadSceneMode(string nameScene)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nameScene);

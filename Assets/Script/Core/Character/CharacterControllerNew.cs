@@ -24,8 +24,10 @@ public class CharacterControllerNew : MonoBehaviour
     public Animator animator;
     private Vector2 previousVelocity;
     private CinemachineVirtualCamera virtualCamera;
+    private GameObject gameplayUIObject;
 
     // Combat Properties
+    private GamePlayUI gameplayUI;
     private Inventory inventory;
     private WeaponController currentWepController; // current weapon controller
     private int currentWeaponIndex; // index of current weapon in inventory
@@ -35,6 +37,9 @@ public class CharacterControllerNew : MonoBehaviour
     private bool isFaceRight = true;
     void Start()
     {
+        // Setup Gameplay UI 
+        setupGameplayUI();
+
         // Setup Rigidbody
         setupRigidBody();
 
@@ -53,36 +58,39 @@ public class CharacterControllerNew : MonoBehaviour
         // Setup Weapon
         setupWeapon();
 
-        // Setup Gameplay UI 
-        setupGameplayUI();
-
         // Setup Events Listeners
         setupEventListeners();
 
-
     }
-
     private void setupEventListeners()
     {
         addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
-        addEventListener("Events/StopFireEvent", OnFireStop);
+        addEventListener(CONST.PATH_EVENT_STOP_FIRE, OnFireStop);
         addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
-        addEventListener("Events/MoveEvent", OnMove);
-        addEventListener("Events/JumpEvent", OnJump);
-        addEventListener("Events/RunEvent", OnRun);
+        addEventListener(CONST.PATH_EVENT_MOVE, OnMove);
+        addEventListener(CONST.PATH_EVENT_JUMP, OnJump);
+        addEventListener(CONST.PATH_EVENT_RUN, OnRun);
+        addEventListener(CONST.PATH_EVENT_RELOAD, OnReload);
+    }
+    private void OnReload(Component sender, object data)
+    {
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_RELOAD2);
+        currentWepController.OnReload(ReloadFinish);
+    }
+
+    private void ReloadFinish(Component sender, object result)
+    {
+        updateAmmoText((int)result);
     }
 
     private void OnRun(Component sender, object data)
     {
         Debug.Log("Run");
     }
-
     private void OnJump(Component sender, object data)
     {
-        Debug.Log("Run");
         rigidbody.AddForce(Vector2.up * 50f, ForceMode2D.Impulse);
     }
-
     private void OnMove(Component sender, object data)
     {
         Vector2 vector2 = (Vector2)data;
@@ -108,22 +116,18 @@ public class CharacterControllerNew : MonoBehaviour
     }
     private void OnFire(Component sender, object data)
     {
-        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
-
-        currentWepController.OnFire(ResultGet, weaponHand);
+        if (currentWepController.OnFire(FireFinish))
+        {
+            animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
+        }
     }
-
-    // stop fire
     private void OnFireStop(Component sender, object data)
     {
         currentWepController.OnFireStop();
     }
-    private void ResultGet(Component sender, object data)
+    private void FireFinish(Component sender, object data)
     {
-        if (data is string) Debug.Log("ResultGet: " + (string)data);
-        else Debug.Log("ResultGet");
-
-
+        gameplayUI.setAmmoCurrentText(data.ToString());
     }
     private void OnSwitchWeapon(Component sender, object data)
     {
@@ -142,8 +146,9 @@ public class CharacterControllerNew : MonoBehaviour
     private void setupGameplayUI()
     {
         GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
-        GameObject gameplayUI = Instantiate(temp);
-        gameplayUI.transform.SetParent(gameObject.transform);
+        gameplayUIObject = Instantiate(temp);
+        gameplayUIObject.transform.SetParent(gameObject.transform);
+        gameplayUI = gameplayUIObject.GetComponent<GamePlayUI>();
     }
     private void setupWeapon()
     {
@@ -166,11 +171,27 @@ public class CharacterControllerNew : MonoBehaviour
         weaponSpriteRenderer.sprite = currentwepSprite;
         weaponShell.transform.localPosition = currentWepController.WeaponStat.ShellExtractor;
         weaponMuzzle.transform.localPosition = currentWepController.WeaponStat.MuzzleExtractor;
+
+        updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
     }
     private void setupInventory()
     {
         inventory = Inventory.Instance;
+        inventory.setAmmoPool(EAmmoType.Rifle, 999);
+        inventory.setAmmoPool(EAmmoType.Shotgun, 999);
+        inventory.setAmmoPool(EAmmoType.Pistol, 999);
+        inventory.setAmmoCurrent(EAmmoType.Rifle, 123);
+        inventory.setAmmoCurrent(EAmmoType.Shotgun, 123);
+        inventory.setAmmoCurrent(EAmmoType.Pistol, 123);
+
     }
+
+    private void updateAmmoText(int ammoCurrent)
+    {
+        gameplayUI.updateAmmo(ammoCurrent,
+            inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType));
+    }
+
     private void setupVirtualCamera()
     {
         // find virtualCamera in hierarchy
@@ -200,29 +221,24 @@ public class CharacterControllerNew : MonoBehaviour
         prefab = animator.gameObject;
         //throw new NotImplementedException();
     }
-
     private void setupCollider()
     {
         //throw new NotImplementedException();
     }
-
     private void setupRigidBody()
     {
         //throw new NotImplementedException();
     }
-
     void Update()
     {
 
     }
-
     private void FixedUpdate()
     {
         transform.rotation = Quaternion.identity;
         calculationVector();
         idleVector();
     }
-
     private void idleVector()
     {
         if (character.IsInGround && !character.IsAccelerating)
@@ -231,7 +247,6 @@ public class CharacterControllerNew : MonoBehaviour
             AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
         }
     }
-
     private void calculationVector()
     {
         Vector2 accelebration = rigidbody.velocity - previousVelocity;

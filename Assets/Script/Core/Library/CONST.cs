@@ -27,19 +27,17 @@ namespace Assets.Script.Core.Library
             , OBJECT_SHELL_EXTRACTOR = "ShellExtractor";
 
         // Events
-        public static readonly string 
+        public static readonly string
             PATH_EVENT_FIRE = "Events/FireEvent"
-            , PATH_EVENT_SWITCH_WEAPON = "Events/SwitchWeaponEvent";
+            , PATH_EVENT_STOP_FIRE = "Events/StopFireEvent"
+            , PATH_EVENT_SWITCH_WEAPON = "Events/SwitchWeaponEvent"
+            , PATH_EVENT_JUMP = "Events/JumpEvent"
+            , PATH_EVENT_RUN = "Events/RunEvent"
+            , PATH_EVENT_MOVE = "Events/MoveEvent"
+            , PATH_EVENT_RELOAD = "Events/ReloadEvent";
 
         // Config File JSON
         public static readonly string FILE_WEAPON_CONFIG = "WeaponConfig";
-
-        // UI Component Name
-        public static readonly string 
-            UI_COMPONENT_NAME_BTN_FIRE = "btnFire"
-            , UI_COMPONENT_NAME_BTN_SWITCH_WEP_PRE = "btnSwitchWepPre"
-            , UI_COMPONENT_NAME_BTN_SWITCH_WEP_NEXT = "btnSwitchWepNext"
-            , UI_COMPONENT_NAME_BTN_JUMP = "btnJump";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";

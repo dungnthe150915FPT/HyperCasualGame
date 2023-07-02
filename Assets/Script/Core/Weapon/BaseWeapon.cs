@@ -32,7 +32,7 @@ namespace Assets.Script.Core.Weapon
 
 
         // magazine
-        private int ammoTotal;
+        private int ammoMax;
         private int ammoCurrent;
 
         // behavior
@@ -48,7 +48,7 @@ namespace Assets.Script.Core.Weapon
         // constructor
         public BaseWeapon(string id, string nameDisplay, string spritePath, Vector2 shellExtractor,
             Vector2 muzzleExtractor, float bulletSpeed, float attackDamage, float fireRate, float reloadTime,
-            float spreadAim, float mass, int ammoTotal, int ammoCurrent, float moveSpeedMultiplier,
+            float spreadAim, float mass, int ammoMax, int ammoCurrent, float moveSpeedMultiplier,
             float jumpSpeedpMultiplier, WeaponEnum.EWeaponType weaponType, WeaponEnum.EAmmoType ammoType,
             WeaponEnum.EWeaponState weaponState, WeaponEnum.EFireMode[] fireMode)
         {
@@ -63,7 +63,7 @@ namespace Assets.Script.Core.Weapon
             this.reloadTime = reloadTime;
             this.spreadAim = spreadAim;
             this.mass = mass;
-            this.ammoTotal = ammoTotal;
+            this.ammoMax = ammoMax;
             this.ammoCurrent = ammoCurrent;
             this.moveSpeedMultiplier = moveSpeedMultiplier;
             this.jumpSpeedpMultiplier = jumpSpeedpMultiplier;
@@ -88,7 +88,7 @@ namespace Assets.Script.Core.Weapon
         public float ReloadTime { get; set; }
         public float SpreadAim { get; set; }
         public float Mass { get; set; }
-        public int AmmoTotal { get; set; }
+        public int AmmoMax { get; set; }
         public int AmmoCurrent { get; set; }
         public float MoveSpeedMultiplier { get; set; }
         public float JumpSpeedpMultiplier { get; set; }
@@ -96,11 +96,6 @@ namespace Assets.Script.Core.Weapon
         public WeaponEnum.EAmmoType AmmoType { get; set; }
         public WeaponEnum.EWeaponState WeaponState { get; set; }
         public WeaponEnum.EFireMode[] FireMode { get; set; }
-
-        public float getBulletSpeed()
-        {
-            return bulletSpeed;
-        }
 
     }
 }
