@@ -60,12 +60,15 @@ public class WeaponController : MonoBehaviour
         timeJustFire = 0f;
     }
 
-    internal void OnReload(TaskCallBack taskCallBack)
+    internal void OnReload(TaskCallBack taskCallBack, int ammoPool)
     {
         if (weaponStat.AmmoCurrent < weaponStat.AmmoMax)
         {
-            weaponStat.AmmoCurrent = weaponStat.AmmoMax;
-            callBackFireUpdateUI(taskCallBack);
+            int ammoClamp = Mathf.Clamp(ammoPool, 0, weaponStat.AmmoMax);
+            int ammoNeed = weaponStat.AmmoMax - weaponStat.AmmoCurrent;
+            int ammoReload = ammoClamp > ammoNeed ? ammoNeed : ammoClamp;
+            weaponStat.AmmoCurrent += ammoReload;
+            if (taskCallBack != null) taskCallBack(this, ammoNeed);
         }
     }
 }

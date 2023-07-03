@@ -104,7 +104,7 @@ public class MainMenuController : MonoBehaviour
         weap.BulletSpeed = 1000f;
         weap.AttackDamage = 10;
         weap.FireRate = 0.1f;
-        weap.ReloadTime = 1;
+        weap.ReloadTime = 0.5f;
         weap.SpreadAim = 0.1f;
         weap.Mass = 1;
         weap.AmmoMax = 30;
@@ -130,7 +130,7 @@ public class MainMenuController : MonoBehaviour
         hp416.BulletSpeed = 1000f;
         hp416.AttackDamage = 10;
         hp416.FireRate = 0.1f;
-        hp416.ReloadTime = 1;
+        hp416.ReloadTime = 1f;
         hp416.SpreadAim = 0.1f;
         hp416.Mass = 1;
         hp416.AmmoMax = 30;
@@ -151,7 +151,7 @@ public class MainMenuController : MonoBehaviour
         auc.BulletSpeed = 1000f;
         auc.AttackDamage = 10;
         auc.FireRate = 0.1f;
-        auc.ReloadTime = 1;
+        auc.ReloadTime = 0.25f;
         auc.SpreadAim = 0.1f;
         auc.Mass = 1;
         auc.AmmoMax = 30;

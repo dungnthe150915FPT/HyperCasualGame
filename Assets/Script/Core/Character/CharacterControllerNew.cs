@@ -35,6 +35,7 @@ public class CharacterControllerNew : MonoBehaviour
     public GameObject weaponShell;  // shell of weapon
     public GameObject weaponMuzzle; // muzzle of weapon
     private bool isFaceRight = true;
+    private bool isReloading = false;
     void Start()
     {
         // Setup Gameplay UI 
@@ -74,13 +75,43 @@ public class CharacterControllerNew : MonoBehaviour
     }
     private void OnReload(Component sender, object data)
     {
+        if (getAmmoCurrWeap() <= 0)
+        {
+            return;
+        }
+        isReloading = true;
+        animator.SetFloat(CONST.ANIMATOR_CONTROLLER_PARAMETER_RELOAD_MULTIPLIER,
+            currentWepController.WeaponStat.ReloadTime);
         animator.SetTrigger(CONST.ANIMATOR_TRIGGER_RELOAD2);
-        currentWepController.OnReload(ReloadFinish);
+        float reloadTime = (float)(CONST.ANIMATION_LENGTH_RELOAD2 *
+            1 / currentWepController.WeaponStat.ReloadTime + CONST.ANIMATOR_LENGTH_EXIT_RELOAD2);
+        StartCoroutine(StartReload(reloadTime));
+    }
+
+    private IEnumerator StartReload(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        int ammoPool = inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType);
+        currentWepController.OnReload(ReloadFinish, ammoPool);
     }
 
     private void ReloadFinish(Component sender, object result)
     {
-        updateAmmoText((int)result);
+        updateAmmoInventory((int)result);
+        updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
+        isReloading = false;
+    }
+
+    private int getAmmoCurrWeap()
+    {
+        return inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType);
+    }
+
+    private void updateAmmoInventory(int result)
+    {
+        EAmmoType ammoType = currentWepController.WeaponStat.AmmoType;
+        int ammoCurrent = getAmmoCurrWeap();
+        inventory.setAmmoCurrent(ammoType, ammoCurrent > result ? ammoCurrent - result : 0);
     }
 
     private void OnRun(Component sender, object data)
@@ -116,6 +147,10 @@ public class CharacterControllerNew : MonoBehaviour
     }
     private void OnFire(Component sender, object data)
     {
+        if (isReloading)
+        {
+            return;
+        }
         if (currentWepController.OnFire(FireFinish))
         {
             animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
@@ -173,7 +208,15 @@ public class CharacterControllerNew : MonoBehaviour
         weaponMuzzle.transform.localPosition = currentWepController.WeaponStat.MuzzleExtractor;
 
         updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
+        updateImgWeap(currentWepController.WeaponStat.SpritePath);
     }
+
+    private void updateImgWeap(string spritePath)
+    {
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        gameplayUI.updateWeaponImage(sprite);
+    }
+
     private void setupInventory()
     {
         inventory = Inventory.Instance;

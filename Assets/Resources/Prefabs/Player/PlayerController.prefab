@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 4886571737562190440}
   m_Layer: 3
   m_Name: PlayerController
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,6 +129,8 @@ MonoBehaviour:
   weaponSpriteRenderer: {fileID: 5545132526620195632}
   animator: {fileID: 4181108078631975686}
   weaponHand: {fileID: 6298407180331951031}
+  weaponShell: {fileID: 0}
+  weaponMuzzle: {fileID: 0}
 --- !u!61 &4553645041669710109
 BoxCollider2D:
   m_ObjectHideFlags: 0

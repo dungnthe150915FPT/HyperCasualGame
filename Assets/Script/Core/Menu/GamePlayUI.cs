@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 //using UnityEngine.UIElements;
 
-public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class GamePlayUI : MonoBehaviour
 {
     [Header("Touchable")]
     public Button btnFire;
@@ -19,10 +19,11 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public Button btnReload;
     private DynamicJoystick joystick;
 
-    [Header("Text")]
+    [Header("Text & Image")]
     public TextMeshProUGUI textDebug;
     public TextMeshProUGUI textAmmoPool;
     public TextMeshProUGUI textAmmoCurrent;
+    public Image imgWeap;
 
     private GameEvent onFire;
     private GameEvent onStopFire;
@@ -118,7 +119,6 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         onStopFire.Raise(this, "FromGameplayUI");
         isFiring = false;
-        Debug.Log("StopFire");
     }
     void Update()
     {
@@ -130,14 +130,6 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         onMove.Raise(this, joystick.Direction);
         if (isFiring && holdFireTime == 0) Fire();
         if (isFiring && holdFireTime > 0.05f) Fire();
-    }
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        ((IPointerDownHandler)btnFire).OnPointerDown(eventData);
-    }
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        ((IPointerUpHandler)btnFire).OnPointerUp(eventData);
     }
     public object setDebugText(string text)
     {
@@ -161,5 +153,10 @@ public class GamePlayUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         setAmmoCurrentText(ammoCurrent.ToString());
         setAmmoPoolText(ammoPool.ToString());
+    }
+
+    internal void updateWeaponImage(Sprite sprite)
+    {
+        imgWeap.sprite = sprite;
     }
 }
