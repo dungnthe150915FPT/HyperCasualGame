@@ -25,6 +25,8 @@ public class CharacterControllerNew : MonoBehaviour
     private Vector2 previousVelocity;
     private CinemachineVirtualCamera virtualCamera;
     private GameObject gameplayUIObject;
+    public List<SpriteRenderer> listSpriteBone = new List<SpriteRenderer>();
+    public List<SpriteRenderer> listSpriteHit = new List<SpriteRenderer>();
 
     // Combat Properties
     private GamePlayUI gameplayUI;
@@ -53,6 +55,9 @@ public class CharacterControllerNew : MonoBehaviour
         // Setup Virtual Camera
         setupVirtualCamera();
 
+        // Setup Character Stats
+        setupCharacterStats();
+
         // Setup Inventory
         setupInventory();
 
@@ -63,6 +68,19 @@ public class CharacterControllerNew : MonoBehaviour
         setupEventListeners();
 
     }
+
+    private void setupCharacterStats()
+    {
+        character.MaxHealth = 100f;
+        character.CurrentHealth = 100f;
+        updateHealth();
+    }
+
+    private void updateHealth()
+    {
+        gameplayUI.updateHealthBar(character.CurrentHealth, character.MaxHealth);
+    }
+
     private void setupEventListeners()
     {
         addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
@@ -278,7 +296,7 @@ public class CharacterControllerNew : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        transform.rotation = Quaternion.identity;
+        //transform.rotation = Quaternion.identity;
         calculationVector();
         idleVector();
     }
@@ -332,6 +350,7 @@ public class CharacterControllerNew : MonoBehaviour
         }
 
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == CONST.TAG_FLOOR)
@@ -340,7 +359,45 @@ public class CharacterControllerNew : MonoBehaviour
             character.IsInGround = true;
             animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
         }
+        if (collision.gameObject.tag == CONST.TAG_MAGIC)
+        {
+            BaseMagic mag = collision.gameObject.GetComponent<MagicController>().BaseMagic;
+            OnHitByMagic(mag);
+        }
     }
+
+    private void OnHitByMagic(BaseMagic mag)
+    {
+        character.CurrentHealth -= mag.Damage;
+        StartCoroutine(OnChangeCharacterColor(0.25f));
+        updateHealth();
+        if(character.CurrentHealth <= 0)
+        {
+            OnDeath();
+        }
+
+    }
+
+    private void OnDeath()
+    {
+
+    }
+
+    private IEnumerator OnChangeCharacterColor(float seconds)
+    {
+        changeBoneColor(Color.red);
+        yield return new WaitForSeconds(seconds);
+        changeBoneColor(Color.white);
+    }
+
+    private void changeBoneColor(Color red)
+    {
+        foreach (SpriteRenderer sprite in listSpriteHit)
+        {
+            sprite.color = red;
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.tag == CONST.TAG_FLOOR)

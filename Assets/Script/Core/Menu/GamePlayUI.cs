@@ -24,6 +24,9 @@ public class GamePlayUI : MonoBehaviour
     public TextMeshProUGUI textAmmoPool;
     public TextMeshProUGUI textAmmoCurrent;
     public Image imgWeap;
+    public Image characterAvatar;
+    public Image prgHealthbar;
+    public TextMeshProUGUI textHealth;
 
     private GameEvent onFire;
     private GameEvent onStopFire;
@@ -95,7 +98,6 @@ public class GamePlayUI : MonoBehaviour
 
     private void StopJump()
     {
-        Debug.Log("StopJump");
     }
     private void Run()
     {
@@ -158,5 +160,20 @@ public class GamePlayUI : MonoBehaviour
     internal void updateWeaponImage(Sprite sprite)
     {
         imgWeap.sprite = sprite;
+    }
+
+    internal void updateCharacterAvatar(Sprite sprite)
+    {
+        characterAvatar.sprite = sprite;
+    }
+
+    internal void updateHealthBar(float healthCurr, float healthTotal)
+    {
+        float fillAmount = healthCurr / healthTotal;
+        prgHealthbar.fillAmount = fillAmount;
+        // change color follow fillAmount, green to red
+        if (fillAmount > 0.5f) prgHealthbar.color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2);
+        else prgHealthbar.color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2);
+        textHealth.text = healthCurr.ToString() + "/" + healthTotal.ToString();
     }
 }
