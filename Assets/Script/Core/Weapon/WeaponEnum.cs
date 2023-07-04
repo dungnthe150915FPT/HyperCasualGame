@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
+[Serializable]
 public class WeaponEnum 
 {
     public enum EAmmoType
@@ -24,6 +26,14 @@ public class WeaponEnum
         Sniper,
         Rocket,
         Grenade
+    }
+
+    public enum EFireMode
+    {
+        Single,
+        Burst,
+        Auto,
+        Heavy
     }
 
     public enum EWeaponState
