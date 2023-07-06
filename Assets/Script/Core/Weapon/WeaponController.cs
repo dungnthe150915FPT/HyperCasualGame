@@ -21,11 +21,32 @@ public class WeaponController : MonoBehaviour
     public delegate void TaskCallBack(Component sender, object result);
     public void setupWeapon(GameObject weaponHand)
     {
-        bullet = Resources.Load<GameObject>(CONST.PREFAB_BULLET_PATH);
+
         muzzle = weaponHand.transform.Find(CONST.OBJECT_MUZZLE_EXTRACTOR).gameObject;
         shell = weaponHand.transform.Find(CONST.OBJECT_SHELL_EXTRACTOR).gameObject;
 
+        setupBullet();
+
     }
+
+    private void setupBullet()
+    {
+        switch (weaponStat.AmmoType)
+        {
+            case EAmmoType.Circle:
+                bullet = Resources.Load<GameObject>(CONST.PREFAB_CIRCLE_BULLET_PATH);
+                break;
+            case EAmmoType.Round:
+                bullet = Resources.Load<GameObject>(CONST.PREFAB_ROUND_BULLET_PATH);
+                break;
+            case EAmmoType.Sharp:
+                bullet = Resources.Load<GameObject>(CONST.PREFAB_SHARP_BULLET_PATH);
+                break;
+        }
+        Debug.Log("Damage: " + weaponStat.AttackDamage);
+        bullet.GetComponent<BulletController>().setBulletDamage(weaponStat.AttackDamage);
+    }
+
     private GameObject bullet;
     private GameObject muzzle;
     private GameObject shell;

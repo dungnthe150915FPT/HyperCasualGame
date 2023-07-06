@@ -17,7 +17,10 @@ namespace Assets.Script.Core.Library
             ANIMATOR_CONTROLLER_PATH = "AnimatorControllers/Gun2New"
             , PREFAB_ANIMATED_PATH = "Prefabs/Sakura"
             , PREFAB_GAMEPLAY_UI = "Prefabs/UIGamePlay/CanvasGamePlay"
-            , PREFAB_BULLET_PATH = "Prefabs/Bullets/Bullet";
+            , PREFAB_CIRCLE_BULLET_PATH = "Prefabs/Bullets/CircleBullet"
+            , PREFAB_ROUND_BULLET_PATH = "Prefabs/Bullets/RoundBullet"
+            , PREFAB_SHARP_BULLET_PATH = "Prefabs/Bullets/SharpBullet";
+
 
         // Object name
         public static readonly string
@@ -33,6 +36,7 @@ namespace Assets.Script.Core.Library
             , PATH_EVENT_SWITCH_WEAPON = "Events/SwitchWeaponEvent"
             , PATH_EVENT_JUMP = "Events/JumpEvent"
             , PATH_EVENT_RUN = "Events/RunEvent"
+            , PATH_EVENT_RUN_STOP = "Events/RunStopEvent"
             , PATH_EVENT_MOVE = "Events/MoveEvent"
             , PATH_EVENT_RELOAD = "Events/ReloadEvent";
 
@@ -94,7 +98,8 @@ namespace Assets.Script.Core.Library
             , TAG_ENEMY = "Enemy"
             , TAG_PROJECTILE = "Projectile"
             , TAG_FLOOR = "Floor"
-            , TAG_MAGIC = "Magic";
+            , TAG_TOXIN = "Toxin"
+            , TAG_BULLET = "Bullet";
 
         // game object layer
         public static readonly string

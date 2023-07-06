@@ -71,11 +71,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6666712158700143304}
-  - component: {fileID: 6666712158700143307}
   - component: {fileID: 8383053458042616181}
-  - component: {fileID: 766554091523644894}
   - component: {fileID: 4886571737562190440}
   - component: {fileID: 938124183558448673}
+  - component: {fileID: 5930457938296951334}
   m_Layer: 3
   m_Name: PlayerController
   m_TagString: Player
@@ -99,18 +98,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6666712158700143307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6666712158700143348}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bc15c94279af9b47b1554663727ba13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8383053458042616181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 938124183558448673}
-  triggerCollider: {fileID: 766554091523644894}
+  triggerCollider: {fileID: 5930457938296951334}
   rigidbody: {fileID: 4886571737562190440}
   weaponSpriteRenderer: {fileID: 5545132526620195632}
   animator: {fileID: 4181108078631975686}
@@ -135,22 +122,6 @@ MonoBehaviour:
   weaponHand: {fileID: 6298407180331951031}
   weaponShell: {fileID: 0}
   weaponMuzzle: {fileID: 0}
---- !u!70 &766554091523644894
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6666712158700143348}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.56}
-  m_Size: {x: 1.32, y: 3.44}
-  m_Direction: 0
 --- !u!50 &4886571737562190440
 Rigidbody2D:
   serializedVersion: 4
@@ -198,6 +169,35 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2, y: 3}
   m_EdgeRadius: 0
+--- !u!60 &5930457938296951334
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6666712158700143348}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.029995412, y: 0.20411496}
+      - {x: -0.1359449, y: 0.1981655}
+      - {x: -0.13594496, y: -0.19873565}
+      - {x: 0.03297019, y: -0.19278625}
 --- !u!1001 &1304364328086840075
 PrefabInstance:
   m_ObjectHideFlags: 0

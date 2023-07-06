@@ -5,7 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
-  - Magic
+  - Bullet
+  - Toxin
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -15,8 +17,8 @@ TagManager:
   - UI
   - Bullet
   - Attackable
-  - Magic
-  - 
+  - Toxin
+  - Enemy
   - 
   - 
   - 

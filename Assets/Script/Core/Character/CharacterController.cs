@@ -1,483 +1,428 @@
 ﻿using Assets.Script.Core.Character;
 using Assets.Script.Core.Library;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-//using UnityEditor.Animations;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using Cinemachine;
-using UnityEngine.InputSystem.Controls;
 using Assets.Script.Core.Weapon;
 using BayatGames.SaveGameFree.Serializers;
 using BayatGames.SaveGameFree;
-using static WeaponEnum;
+using Cinemachine;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using static WeaponEnum;
+using UnityEngine.TextCore.Text;
+using Unity.VisualScripting;
 
 public class CharacterController : MonoBehaviour
 {
-    //// Start System
-    //private BaseCharacter character = new BaseCharacter();
-    //private new CapsuleCollider2D collider;
-    //private CapsuleCollider2D triggerCollider;
-    //private new Rigidbody2D rigidbody;
-    //private GameObject prefab;
-    //private PlayerInput playerInput;
-    //private SpriteRenderer weaponSpriteRenderer;
-    //private Animator animator;
-    //private Vector2 previousVelocity;
-    //private CinemachineVirtualCamera virtualCamera;
+    // Unity Components
+    private BaseCharacter character = new BaseCharacter();
+    public new BoxCollider2D collider;
+    public Collider2D triggerCollider;
+    public new Rigidbody2D rigidbody;
+    private GameObject prefab;
+    public SpriteRenderer weaponSpriteRenderer;
+    public Animator animator;
+    private Vector2 previousVelocity;
+    private CinemachineVirtualCamera virtualCamera;
+    private GameObject gameplayUIObject;
+    public List<SpriteRenderer> listSpriteBone = new List<SpriteRenderer>();
+    public List<SpriteRenderer> listSpriteHit = new List<SpriteRenderer>();
 
-    //// Combat System
-    //private Inventory inventory;
-    //private WeaponController currentWepController;
-    //private int currentWeaponIndex;
-    //private GameObject weaponHand;
+    // Combat Properties
+    private GamePlayUI gameplayUI;
+    private Inventory inventory;
+    private WeaponController currentWepController; // current weapon controller
+    private int currentWeaponIndex; // index of current weapon in inventory
+    public GameObject weaponHand;   // hand hold weapon
+    public GameObject weaponShell;  // shell of weapon
+    public GameObject weaponMuzzle; // muzzle of weapon
+    private bool isFaceRight = true;
+    private bool isReloading = false;
+    private bool isRunning = false;
+    private float speedMultiplier = 1f;
+    void Start()
+    {
+        // Setup Gameplay UI 
+        setupGameplayUI();
 
-    ////[Header("Events")]
-    ////public GameEvent onFire;
+        // Setup Rigidbody
+        setupRigidBody();
 
-    //// Event
-    //private bool isLeftShiftHolding = false;
-    //void Start()
-    //{
-    //    // Rigidbody2D
-    //    setupRigidBody();
+        // Setup Collider and Trigger
+        setupCollider();
 
-    //    // Collider2D and Trigger
-    //    setupColliderAndTrigger();
+        // Setup Animator
+        setupAnimator();
 
-    //    // Virtual Camera
-    //    setupVirtualCamera();
+        // Setup Virtual Camera
+        setupVirtualCamera();
 
-    //    // Animated
-    //    setupAnimated();
+        // Setup Character Stats
+        setupCharacterStats();
 
-    //    // Input Action
-    //    setupInputAction();
+        // Setup Inventory
+        setupInventory();
 
-    //    // Weapon Renderer
-    //    setupWeaponRenderer();
+        // Setup Weapon
+        setupWeapon();
 
-    //    // Inventory
-    //    setupInventory();
+        // Setup Events Listeners
+        setupEventListeners();
 
-    //    // Weapon
-    //    setupWeapon();
+    }
 
-    //    // GamePlay UI
-    //    setupGamePlayUI();
+    private void setupCharacterStats()
+    {
+        character.MoveSpeed = 10f;
+        character.MaxHealth = 100f;
+        character.CurrentHealth = 100f;
+        character.JumpHeight = 50f;
+        speedMultiplier = 1f;
+        updateHealth();
+    }
 
-    //    // Event Listener
-    //    setupEventListener();
+    private void updateHealth()
+    {
+        gameplayUI.updateHealthBar(character.CurrentHealth, character.MaxHealth);
+    }
 
-    //    rigidbody.bodyType = RigidbodyType2D.Dynamic;
-    //}
-    //private void setupEventListener()
-    //{
-    //    addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
-    //    addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
-    //    addEventListener("Events/MoveLeftEvent", OnMoveLeft);
-    //    addEventListener("Events/MoveRightEvent", OnMoveRight);
-    //    addEventListener("Events/MoveLeftEvent", OnMoveLeft);
-    //}
+    private void setupEventListeners()
+    {
+        addEventListener(CONST.PATH_EVENT_FIRE, OnFire);
+        addEventListener(CONST.PATH_EVENT_STOP_FIRE, OnFireStop);
+        addEventListener(CONST.PATH_EVENT_SWITCH_WEAPON, OnSwitchWeapon);
+        addEventListener(CONST.PATH_EVENT_MOVE, OnMove);
+        addEventListener(CONST.PATH_EVENT_JUMP, OnJump);
+        addEventListener(CONST.PATH_EVENT_RUN, OnRun);
+        addEventListener(CONST.PATH_EVENT_RUN_STOP, OnRunStop);
+        addEventListener(CONST.PATH_EVENT_RELOAD, OnReload);
+    }
 
-    //private void OnMoveRight(Component arg0, object arg1)
-    //{
-    //    Debug.Log("Move Right: " + arg1.ToString());
-    //    //gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.right * 10f;
-    //}
+    private void OnReload(Component sender, object data)
+    {
+        if (getAmmoCurrWeap() <= 0)
+        {
+            return;
+        }
+        isReloading = true;
+        animator.SetFloat(CONST.ANIMATOR_CONTROLLER_PARAMETER_RELOAD_MULTIPLIER,
+            currentWepController.WeaponStat.ReloadTime);
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_RELOAD2);
+        float reloadTime = (float)(CONST.ANIMATION_LENGTH_RELOAD2 *
+            1 / currentWepController.WeaponStat.ReloadTime + CONST.ANIMATOR_LENGTH_EXIT_RELOAD2);
+        StartCoroutine(StartReload(reloadTime));
+    }
 
-    //private void OnMoveLeft(Component sender, object data)
-    //{
-    //    Debug.Log("Move Left: " + data.ToString());
+    private IEnumerator StartReload(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        int ammoPool = inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType);
+        currentWepController.OnReload(ReloadFinish, ammoPool);
+    }
 
-    //    gameObject.GetComponent<Rigidbody2D>().velocity = Vector2.left * 10f;
+    private void ReloadFinish(Component sender, object result)
+    {
+        updateAmmoInventory((int)result);
+        updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
+        isReloading = false;
+    }
 
-    //    //character.CharacterState = CharacterState.Walking;
-    //    //AnimatedLibrary.SetParameter(character.CharacterState, animator);
-    //    //}
-    //}
+    private int getAmmoCurrWeap()
+    {
+        return inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType);
+    }
 
-    //private void moveLeft()
-    //{
-    //    // rigidbody.velocity = Vector2.left * 10f;
-    //}
+    private void updateAmmoInventory(int result)
+    {
+        EAmmoType ammoType = currentWepController.WeaponStat.AmmoType;
+        int ammoCurrent = getAmmoCurrWeap();
+        inventory.setAmmoCurrent(ammoType, ammoCurrent > result ? ammoCurrent - result : 0);
+    }
 
-    //private void moveRight()
-    //{
-    //    //rigidbody.velocity = Vector2.right * 10f;
-    //}
+    private void OnRun(Component sender, object data)
+    {
+        if (character.State == CharacterState.Walking)
+        {
+            isRunning = true;
+            speedMultiplier = 3f;
+            character.State = CharacterState.Running;
+        }
+        AnimatedLibrary.SetParameter(character.State, animator);
+    }
 
-    //private void addEventListener(string eventName, UnityAction<Component, object> callback)
-    //{
-    //    GameEventListener eventListener = gameObject.AddComponent<GameEventListener>();
-    //    GameEvent onInputEvent = Resources.Load<GameEvent>(eventName);
-    //    eventListener.gameEvent = onInputEvent;
-    //    eventListener.OnGameEventListenerEnable();
-    //    CustomGameEvent eve = new CustomGameEvent();
-    //    eve.AddListener(callback);
-    //    eventListener.response = eve;
-    //}
+    private void OnRunStop(Component arg0, object arg1)
+    {
+        if (character.State == CharacterState.Running)
+        {
+            isRunning = false;
+            speedMultiplier = 1f;
+            character.State = CharacterState.Walking;
+        }
+    }
+    private void OnJump(Component sender, object data)
+    {
+        rigidbody.AddForce(Vector2.up * character.JumpHeight, ForceMode2D.Impulse);
+    }
+    private void OnMove(Component sender, object data)
+    {
+        Vector2 vector2 = (Vector2)data;
+        if (vector2 != Vector2.zero) startMoving(vector2);
+    }
+    private void stopMoving()
+    {
 
-    //public void OnFire(Component sender, object data)
-    //{
-    //    if (data is string) Debug.Log("Hello in UI: " + (string)data);
-    //    else Debug.Log("OnEventRaised in UI");
-    //    animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
+    }
+    private void startMoving(Vector2 vector)
+    {
+        onFaceSide(vector);
+        setWeaponAngle(vector);
 
-    //    //currentWepController.OnFire(ResultGet, weaponHand);
-    //}
-    //private void ResultGet(Component sender, object data)
-    //{
-    //    if (data is string) Debug.Log("ResultGet: " + (string)data);
-    //    else Debug.Log("ResultGet");
-    //}
-    //public void OnSwitchWeapon(Component sender, object data)
-    //{
-    //    changeWeapon(currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1);
-    //}
-    //private void setupGamePlayUI()
-    //{
-    //    GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
-    //    GameObject gameplayUI = Instantiate(temp);
-    //    gameplayUI.transform.SetParent(gameObject.transform);
-    //    //UnityEngine.Cursor.lockState = CursorLockMode.Confined; // keep confined in the game window
+        rigidbody.velocity = new Vector2(vector.x * character.MoveSpeed * speedMultiplier, rigidbody.velocity.y);
+        if (isRunning) character.State = CharacterState.Running;
+        else character.State = CharacterState.Walking;
+        AnimatedLibrary.SetParameter(character.State, animator);
+    }
+    private void setWeaponAngle(Vector2 vector)
+    {
+        animator.SetFloat("aimDirection", (float)(vector.y) * 180f);
+    }
+    private void OnFire(Component sender, object data)
+    {
+        if (isReloading) return;
+        if (currentWepController.OnFire(FireFinish))
+        {
+            animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
+        }
+    }
+    private void OnFireStop(Component sender, object data)
+    {
+        currentWepController.OnFireStop();
+    }
+    private void FireFinish(Component sender, object data)
+    {
+        gameplayUI.setAmmoCurrentText(data.ToString());
+    }
+    private void OnSwitchWeapon(Component sender, object data)
+    {
+        changeWeapon(currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1);
+    }
+    private void addEventListener(string eventName, UnityAction<Component, object> callback)
+    {
+        GameEventListener eventListener = gameObject.AddComponent<GameEventListener>();
+        GameEvent onInputEvent = Resources.Load<GameEvent>(eventName);
+        eventListener.gameEvent = onInputEvent;
+        eventListener.OnGameEventListenerEnable();
+        CustomGameEvent eve = new CustomGameEvent();
+        eve.AddListener(callback);
+        eventListener.response = eve;
+    }
+    private void setupGameplayUI()
+    {
+        GameObject temp = Resources.Load<GameObject>(CONST.PREFAB_GAMEPLAY_UI);
+        gameplayUIObject = Instantiate(temp);
+        gameplayUIObject.transform.SetParent(gameObject.transform);
+        gameplayUI = gameplayUIObject.GetComponent<GamePlayUI>();
+    }
+    private void setupWeapon()
+    {
+        currentWepController = gameObject.AddComponent<WeaponController>();
+        BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
 
+        inventory.addWeapon(weapons[0]);
+        inventory.addWeapon(weapons[1]);
+        inventory.addWeapon(weapons[2]);
 
-    //}
-    //private void setupWeapon()
-    //{
-    //    currentWepController = gameObject.AddComponent<WeaponController>();
-    //    BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>(CONST.FILE_WEAPON_CONFIG, new BaseWeapon[0], new SaveGameJsonSerializer());
+        changeWeapon(1);
+    }
+    private void changeWeapon(int index)
+    {
+        currentWepController.WeaponStat = inventory.getWeapon(index);
+        currentWepController.setupWeapon(weaponHand);
+        inventory.setWeaponState(index, EWeaponState.Equipping);
+        currentWeaponIndex = index;
+        Sprite currentwepSprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath);
+        weaponSpriteRenderer.sprite = currentwepSprite;
+        weaponShell.transform.localPosition = currentWepController.WeaponStat.ShellExtractor;
+        weaponMuzzle.transform.localPosition = currentWepController.WeaponStat.MuzzleExtractor;
 
-    //    inventory.addWeapon(weapons[0]);
-    //    inventory.addWeapon(weapons[1]);
-    //    inventory.addWeapon(weapons[2]);
+        updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
+        updateImgWeap(currentWepController.WeaponStat.SpritePath);
+    }
 
-    //    changeWeapon(0);
-    //}
-    //private void changeWeapon(int index)
-    //{
-    //    currentWepController.WeaponStat = inventory.getWeapon(index);
-    //    inventory.setWeaponState(index, EWeaponState.Equipping);
-    //    currentWeaponIndex = index;
+    private void updateImgWeap(string spritePath)
+    {
+        Sprite sprite = Resources.Load<Sprite>(spritePath);
+        gameplayUI.updateWeaponImage(sprite);
+    }
 
-    //    Sprite currentwepSprite = Resources.Load<Sprite>(currentWepController.WeaponStat.SpritePath);
-    //    weaponSpriteRenderer.sprite = currentwepSprite;
+    private void setupInventory()
+    {
+        inventory = Inventory.Instance;
+        inventory.setAmmoPool(EAmmoType.Circle, 999);
+        inventory.setAmmoPool(EAmmoType.Round, 999);
+        inventory.setAmmoPool(EAmmoType.Sharp, 999);
+        inventory.setAmmoCurrent(EAmmoType.Circle, 888);
+        inventory.setAmmoCurrent(EAmmoType.Round, 888);
+        inventory.setAmmoCurrent(EAmmoType.Sharp, 888);
 
-    //}
-    //private void setupInventory()
-    //{
-    //    inventory = Inventory.Instance;
-    //}
-    //private void setupWeaponRenderer()
-    //{
-    //    weaponHand = new GameObject();
-    //    weaponHand = prefab.transform.Find(PSB.SKELETON)
-    //        .transform.Find(PSB.BONE_ROOT)
-    //        .transform.Find(PSB.BONE_PELVIS)
-    //        .transform.Find(PSB.BONE_SPINE_MIDDLE)
-    //        .transform.Find(PSB.BONE_SPINE_HIGHT)
-    //        .transform.Find(PSB.BONE_FRONT_ARM_UP)
-    //        .transform.Find(PSB.BONE_FRONT_ARM_DOWN)
-    //        .transform.Find(PSB.BONE_HOLD_WEAPON)
-    //        .transform.Find(PSB.BONE_WEAPON).gameObject;
-    //    // find child name Weapon of this game object
-    //    weaponSpriteRenderer = weaponHand.GetComponent<SpriteRenderer>();
-    //    // CONST.WEAPON_SPRITE_PATH + CONST.WEAPON_SWORD
-    //    // change sprite from resources
-    //    weaponSpriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Empty");
-    //    //Debug.Log(weaponSpriteRenderer.sprite.name);        
+    }
 
-    //}
-    //private void setupInputAction()
-    //{
-    //    playerInput = gameObject.AddComponent<PlayerInput>();
-    //    playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
-    //    // get input action asset from resources
-    //    InputActionAsset inputActionAsset = Resources.Load<InputActionAsset>(CONST.PLAYER_INPUT_ACTIONS_PATH);
-    //    InputActionMap actionMapPlayer = inputActionAsset.FindActionMap(CONST.ACTIONMAP_PLAYER);
+    private void updateAmmoText(int ammoCurrent)
+    {
+        gameplayUI.updateAmmo(ammoCurrent,
+            inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType));
+    }
 
-    //    actionMapPlayer.FindAction(CONST.ACTION_MOVE).started += MoveStarted;
-    //    actionMapPlayer.FindAction(CONST.ACTION_MOVE).canceled += MoveCanceled;
+    private void setupVirtualCamera()
+    {
+        // find virtualCamera in hierarchy
+        virtualCamera = GameObject.Find(CONST.VIRTUAL_CAMERA_NAME).GetComponent<CinemachineVirtualCamera>();
+        if (virtualCamera == null) Debug.Log("Virtual Camera not found. Creating new one.");
 
-    //    actionMapPlayer.FindAction(CONST.ACTION_JUMP).performed += Jump;
-
-    //    actionMapPlayer.FindAction(CONST.ACTION_RUN).started += RunStarted;
-    //    actionMapPlayer.FindAction(CONST.ACTION_RUN).canceled += RunCanceled;
-
-    //    actionMapPlayer.FindAction(CONST.ACTION_SWITCH_WEAPON).performed += SwitchWeapon;
-
-    //    actionMapPlayer.FindAction("Fire").performed += Fire;
-
-    //    playerInput.actions = inputActionAsset;
-    //    playerInput.actions.Enable();
-
-    //    previousVelocity = rigidbody.velocity;
-    //}
-    //private void Fire(InputAction.CallbackContext context)
-    //{
-    //    OnFire(this, "F");
-    //}
-    //private void SwitchWeapon(InputAction.CallbackContext context)
-    //{
-    //    // Log to see what key is pressed
-    //    //Debug.Log("SwitchWeapon: " + context.control.name);
-    //    KeyControl keyControl = (KeyControl)context.control;
-    //    int indexToSwitch = -1;
-    //    int length = inventory.getWeaponLength();
-    //    // get keycontrol of q and e
-    //    switch (context.control.name)
-    //    {
-    //        case "q":
-    //            indexToSwitch = currentWeaponIndex - 1 < 0 ? length - 1 : currentWeaponIndex - 1;
-    //            break;
-    //        case "e":
-    //            indexToSwitch = currentWeaponIndex + 1 >= length ? 0 : currentWeaponIndex + 1;
-    //            break;
-    //    }
-    //    //changeWeapon(indexToSwitch);
-    //}
-    //private void MoveCanceled(InputAction.CallbackContext context)
-    //{
-    //    // stop moving, set volicity to 0,-1
-    //    if (character.IsInGround)
-    //    {
-    //        //Debug.Log("IsInGround");
-    //        //for (int i = 0; i < 10; i++)
-    //        //{
-    //        //    rigidbody.velocity = new Vector2(0, -1);
-    //        //}
-
-    //        // change rigidbody to kinematic
-    //        rigidbody.bodyType = RigidbodyType2D.Static;
-    //    }
-    //    else
-    //    {
-    //        //Debug.Log("IsNotInGround");
-    //        rigidbody.velocity = Vector2.zero;
-    //    }
-    //    character.CharacterState = CharacterState.Idle;
-    //    AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
-    //}
-    //private void MoveStarted(InputAction.CallbackContext context)
-    //{
-    //    // set rigidbody to dynamic
-    //    rigidbody.bodyType = RigidbodyType2D.Dynamic;
-    //    // log to console context.ReadValue<Vector2>()
-    //    // Debug.Log(context.ReadValue<Vector2>());
-    //    if (character.IsInGround)
-    //    {
-    //        if (isLeftShiftHolding || Input.GetKey(KeyCode.LeftShift))
-    //        {
-    //            character.CharacterState = CharacterState.Running;
-    //            rigidbody.velocity = context.ReadValue<Vector2>() * 20f;
-    //        }
-    //        else
-    //        {
-    //            character.CharacterState = CharacterState.Walking;
-    //            rigidbody.velocity = context.ReadValue<Vector2>() * 10f;
-    //        }
-    //        AnimatedLibrary.SetParameter(character.CharacterState, animator);
-    //    }
-    //    else
-    //    {
-    //        rigidbody.velocity = context.ReadValue<Vector2>() * 2f;
-    //    }
-    //}
-    //private void RunCanceled(InputAction.CallbackContext context)
-    //{
-    //    isLeftShiftHolding = false;
-    //}
-    //private void RunStarted(InputAction.CallbackContext context)
-    //{
-    //    // set isLeftShiftDown to true
-    //    isLeftShiftHolding = true;
-    //}
-    //private void setupAnimated()
-    //{
-    //    //load prefab from resources
-    //    GameObject prefabLoad = Resources.Load<GameObject>(CONST.PREFAB_ANIMATED_PATH);
-
-    //    // create an instance of prefab and add it to child of this gameobject
-    //    GameObject instanceAnimated = Instantiate(prefabLoad, transform.position, Quaternion.identity);
-
-    //    instanceAnimated.transform.position =
-    //        new Vector3(transform.position.x,
-    //        transform.position.y + CONST.INSTANCED_PREFAB_ANIMATION_POSITION.Y,
-    //        transform.position.z);
-    //    instanceAnimated.transform.parent = transform;
-
-    //    // load animator controller from resources
-    //    AnimatorController animatorController = Resources.Load<AnimatorController>(CONST.ANIMATOR_CONTROLLER_PATH);
-
-    //    animator = instanceAnimated.GetComponent<Animator>();
-    //    prefab = instanceAnimated;
-    //    // set animator controller to animator
-    //    animator.runtimeAnimatorController = animatorController;
-
-    //    // play idle animation
-    //    animator.Play("idle", 0, 0f);
-    //    character.CharacterState = CharacterState.Idle;
-    //    AnimatedLibrary.SetParameter(character.CharacterState, animator);
-
-    //}
-    //private void setupRigidBody()
-    //{
-    //    rigidbody = gameObject.AddComponent<Rigidbody2D>();
-    //    //rigidbody.bodyType = RigidbodyType2D.Static;
-    //    rigidbody.mass = 1;
-    //    rigidbody.angularDrag = 0;
-    //    gameObject.tag = CONST.TAG_PLAYER;
-    //    gameObject.layer = LayerMask.NameToLayer(CONST.LAYER_PLAYER);
-    //}
-    //private void setupColliderAndTrigger()
-    //{
-    //    // add trigger collider
-    //    collider = gameObject.AddComponent<CapsuleCollider2D>();
-    //    collider.size = new Vector2(0.5f, 1.5f);
-    //    triggerCollider = gameObject.AddComponent<CapsuleCollider2D>();
-    //    triggerCollider.isTrigger = true;
-    //    triggerCollider.size = new Vector2(0.7f, 1.7f);
-    //}
-    //private void setupVirtualCamera()
-    //{
-
-    //    // find virtualCamera in hierarchy
-    //    virtualCamera = GameObject.Find(CONST.VIRTUAL_CAMERA_NAME).GetComponent<CinemachineVirtualCamera>();
-    //    if (virtualCamera == null) Debug.Log("Virtual Camera not found. Creating new one.");
-
-    //    virtualCamera.Follow = gameObject.transform;
-    //    // set mode of virtual camera to orthographic
-    //    virtualCamera.m_Lens.Orthographic = true;
-    //    // set size orthographic of virtual camera
-    //    virtualCamera.m_Lens.OrthographicSize = 10f;
+        virtualCamera.Follow = gameObject.transform;
+        // set mode of virtual camera to orthographic
+        virtualCamera.m_Lens.Orthographic = true;
+        // set size orthographic of virtual camera
+        virtualCamera.m_Lens.OrthographicSize = 10f;
 
 
 
-    //    //virtualCamera.m_Lens.FieldOfView = 80;
-    //    //virtualCamera.m_Lens.OrthographicSize = 3f;
-    //    // body of virtual camera is Framing Transposer
-    //    CinemachineFramingTransposer framingTrans = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-    //    framingTrans.m_TrackedObjectOffset = new Vector3(5, 2, 0);
-    //    framingTrans.m_XDamping = 0;
-    //    framingTrans.m_YDamping = 0;
-    //    framingTrans.m_ZDamping = 0;
-    //}
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == CONST.TAG_FLOOR)
-    //    {
-    //        // log to console with delta time
-    //        //Debug.Log("OnTriggerEnter2D: " + Time.deltaTime);
-    //        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_FALLING, false);
-    //        character.IsInGround = true;
-    //        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
-    //    }
-    //}
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.tag == CONST.TAG_FLOOR)
-    //    {
-    //        // log to console with delta time
-    //        //Debug.Log("OnTriggerExit2D: " + Time.deltaTime);
-    //        if (rigidbody.velocity.y > 0.01)
-    //        {
-    //            character.CharacterState = CharacterState.Jumping;
-    //            character.IsInGround = false;
-    //            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, false);
-    //            AnimatedLibrary.SetParameter(character.CharacterState, animator);
-    //        }
-    //    }
-    //}
-    //void Update()
-    //{
-    //    // lock rotation
-    //    transform.rotation = Quaternion.identity;
-    //    onFaceSide();
+        //virtualCamera.m_Lens.FieldOfView = 80;
+        //virtualCamera.m_Lens.OrthographicSize = 3f;
+        // body of virtual camera is Framing Transposer
+        CinemachineFramingTransposer framingTrans = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        framingTrans.m_TrackedObjectOffset = new Vector3(5, 2, 0);
+        framingTrans.m_XDamping = 0;
+        framingTrans.m_YDamping = 0;
+        framingTrans.m_ZDamping = 0;
+    }
+    private void setupAnimator()
+    {
+        previousVelocity = rigidbody.velocity;
+        prefab = animator.gameObject;
+        //throw new NotImplementedException();
+    }
+    private void setupCollider()
+    {
+        //throw new NotImplementedException();
+    }
+    private void setupRigidBody()
+    {
+        //throw new NotImplementedException();
+    }
+    void Update()
+    {
 
-    //    // log to console state of character
-    //    //Debug.Log("Character State: " + character.CharacterState);
+    }
+    private void FixedUpdate()
+    {
+        //transform.rotation = Quaternion.identity;
+        calculationVector();
+        idleVector();
+    }
+    private void idleVector()
+    {
+        if (character.IsInGround && !character.IsAccelerating)
+        {
+            character.State = CharacterState.Idle;
+            AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
+        }
+    }
+    private void calculationVector()
+    {
+        Vector2 accelebration = rigidbody.velocity - previousVelocity;
+        if (accelebration.magnitude > 0.1f)
+        {
+            character.IsAccelerating = true;
+            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING, true);
+        }
+        else if (accelebration.magnitude < 0.1f)
+        {
+            character.IsAccelerating = false;
+            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING, false);
+        }
 
-    //}
-    //private void FixedUpdate()
-    //{
-    //    Vector2 accelebration = rigidbody.velocity - previousVelocity;
+        // check gameobject is falling or not
+        if (rigidbody.velocity.y < -0.5f && !character.IsInGround)
+        {
+            character.State = CharacterState.Falling;
+            AnimatedLibrary.SetParameter(character.State, animator);
+        }
 
-    //    if (accelebration.magnitude > 0.1f)
-    //    {
-    //        character.IsAccelerating = true;
-    //        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING, true);
-    //    }
-    //    else if (accelebration.magnitude < 0.1f)
-    //    {
-    //        character.IsAccelerating = false;
-    //        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING, false);
-    //    }
+        if (character.IsInGround && !character.IsAccelerating)
+        {
+            character.State = CharacterState.Idle;
+            AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
+        }
+    }
 
-    //    // check gameobject is falling or not
-    //    if (rigidbody.velocity.y < -0.5f && !character.IsInGround)
-    //    {
-    //        character.CharacterState = CharacterState.Falling;
-    //        AnimatedLibrary.SetParameter(character.CharacterState, animator);
-    //    }
+    void onFaceSide(Vector2 vector)
+    {
+        if (vector.x < 0 && isFaceRight)
+        {
+            prefab.transform.localScale = new Vector3(-1, 1, 1);
+            isFaceRight = false;
+        }
+        else if (vector.x > 0 && !isFaceRight)
+        {
+            prefab.transform.localScale = new Vector3(1, 1, 1);
+            isFaceRight = true;
+        }
 
-    //    if (character.IsInGround && !character.IsAccelerating)
-    //    {
-    //        character.CharacterState = CharacterState.Idle;
-    //        AnimatedLibrary.SetParameter(CharacterState.Idle, animator);
-    //    }
-    //    if (character.IsInGround && Input.GetKey(KeyCode.LeftShift))
-    //    {
-    //        if (rigidbody.velocity.x < 0)
-    //        {
-    //            rigidbody.velocity = new Vector2(-1, 0) * 20f;
-    //        }
-    //        else if (rigidbody.velocity.x > 0)
-    //        {
-    //            rigidbody.velocity = new Vector2(1, 0) * 20f;
-    //        }
-    //    }
-    //    //// if in ground, is accelerating, set state to walking or running
-    //    //else if (character.IsInGround && character.IsAccelerating && character.CharacterState != CharacterState.Running)
-    //    //{
-    //    //    character.CharacterState = CharacterState.Walking;
-    //    //    AnimatedLibrary.SetParameter(CharacterState.Walking, animator);
-    //    //}
-    //    //else if (character.IsInGround && character.IsAccelerating && character.CharacterState != CharacterState.Walking)
-    //    //{
-    //    //    character.CharacterState = CharacterState.Running;
-    //    //    AnimatedLibrary.SetParameter(CharacterState.Running, animator);
-    //    //}
-    //}
-    //void onFaceSide()
-    //{
-    //    if (rigidbody.velocity.x < 0)
-    //    {
-    //        // flip sprite to left
-    //        transform.localScale = new Vector3(-1, 1, 1);
-    //    }
-    //    else if (rigidbody.velocity.x > 0)
-    //    {
-    //        // flip sprite to right
-    //        transform.localScale = new Vector3(1, 1, 1);
-    //    }
+    }
 
-    //}
-    //void Jump(InputAction.CallbackContext ctx)
-    //{
-    //    // check if character is in ground, if yes, set state to jumping
-    //    if (character.IsInGround)
-    //    {
-    //        character.CharacterState = CharacterState.Jumping;
-    //        AnimatedLibrary.SetParameter(character.CharacterState, animator);
-    //        rigidbody.AddForce(new Vector2(0, 10f), ForceMode2D.Impulse);
-    //        character.IsInGround = false;
-    //        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, false);
-    //    }
-    //}
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == CONST.TAG_FLOOR)
+        {
+            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_FALLING, false);
+            character.IsInGround = true;
+            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
+        }
+    }
 
+    public void OnHitByToxin(GameObject toxin)
+    {
+        BaseToxin baseToxin = toxin.GetComponent<ToxinController>().BaseToxin;
+        character.CurrentHealth -= baseToxin.Damage;
+        StartCoroutine(OnChangeCharacterColor(0.25f));
+        updateHealth();
+        if (character.CurrentHealth <= 0) OnDeath();
+    }
 
+    private void OnDeath()
+    {
 
+    }
+
+    private IEnumerator OnChangeCharacterColor(float seconds)
+    {
+        changeBoneColor(Color.red);
+        yield return new WaitForSeconds(seconds);
+        changeBoneColor(Color.white);
+    }
+
+    private void changeBoneColor(Color red)
+    {
+        foreach (SpriteRenderer sprite in listSpriteHit)
+        {
+            sprite.color = red;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == CONST.TAG_FLOOR)
+        {
+            if (rigidbody.velocity.y > 0.01)
+            {
+                character.State = CharacterState.Jumping;
+                character.IsInGround = false;
+                animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, false);
+                AnimatedLibrary.SetParameter(character.State, animator);
+            }
+        }
+    }
 }

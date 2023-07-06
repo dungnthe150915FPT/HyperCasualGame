@@ -8,13 +8,9 @@ public class WeaponEnum
     public enum EAmmoType
     {
         None,
-        Pistol,
-        SMG,
-        Rifle,
-        Shotgun,
-        Sniper,
-        Rocket,
-        Grenade
+        Circle,
+        Round,
+        Sharp
     }
     public enum EWeaponType
     {

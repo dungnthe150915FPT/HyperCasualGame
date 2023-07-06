@@ -34,11 +34,13 @@ public class GamePlayUI : MonoBehaviour
     private GameEvent onMove;
     private GameEvent onJump;
     private GameEvent onRun;
+    private GameEvent onRunStop;
     private GameEvent onReload;
 
     // EventTrigger
     private EventTrigger firee;
     private EventTrigger jump;
+    private EventTrigger run;
 
     // Parameter
     private float holdFireTime = 0f;
@@ -60,52 +62,62 @@ public class GamePlayUI : MonoBehaviour
         onMove = Resources.Load<GameEvent>(CONST.PATH_EVENT_MOVE);
         onJump = Resources.Load<GameEvent>(CONST.PATH_EVENT_JUMP);
         onRun = Resources.Load<GameEvent>(CONST.PATH_EVENT_RUN);
+        onRunStop = Resources.Load<GameEvent>(CONST.PATH_EVENT_RUN_STOP);
         onReload = Resources.Load<GameEvent>(CONST.PATH_EVENT_RELOAD);
     }
 
     private void setupButtons()
     {
-        firee = btnFire.AddComponent<EventTrigger>();
-        EventTrigger.Entry entryFire = new EventTrigger.Entry();
-        entryFire.eventID = EventTriggerType.PointerDown;
-        entryFire.callback.AddListener((data) => { Fire(); });
-        firee.triggers.Add(entryFire);
-        entryFire = new EventTrigger.Entry();
-        entryFire.eventID = EventTriggerType.PointerUp;
-        entryFire.callback.AddListener((data) => { StopFire(); });
-        firee.triggers.Add(entryFire);
-
         btnSwitchWepPre.onClick.AddListener(SwitchWeaponPre);
         btnReload.onClick.AddListener(ReloadAmmunation);
 
+        EventTriggerType pointUp = EventTriggerType.PointerUp;
+        EventTriggerType pointDown = EventTriggerType.PointerDown;
+
+        firee = btnFire.AddComponent<EventTrigger>();
+        EventTrigger.Entry entryFire = new EventTrigger.Entry();
+        entryFire.eventID = pointDown;
+        entryFire.callback.AddListener((data) => { Fire(); });
+        firee.triggers.Add(entryFire);
+        entryFire = new EventTrigger.Entry();
+        entryFire.eventID = pointUp;
+        entryFire.callback.AddListener((data) => { StopFire(); });
+        firee.triggers.Add(entryFire);
+
         jump = btnJump.AddComponent<EventTrigger>();
         EventTrigger.Entry entryJump = new EventTrigger.Entry();
-        entryJump.eventID = EventTriggerType.PointerDown;
+        entryJump.eventID = pointDown;
         entryJump.callback.AddListener((data) => { Jump(); });
         jump.triggers.Add(entryJump);
         entryJump = new EventTrigger.Entry();
-        entryJump.eventID = EventTriggerType.PointerUp;
+        entryJump.eventID = pointUp;
         entryJump.callback.AddListener((data) => { StopJump(); });
         jump.triggers.Add(entryJump);
 
-        //btnRun.onClick.AddListener(Run);
+        run = btnRun.AddComponent<EventTrigger>();
+        EventTrigger.Entry entryRun = new EventTrigger.Entry();
+        entryRun.eventID = pointDown;
+        entryRun.callback.AddListener((data) => { Run(); });
+        run.triggers.Add(entryRun);
+        entryRun = new EventTrigger.Entry();
+        entryRun.eventID = pointUp;
+        entryRun.callback.AddListener((data) => { StopRun(); });
+        run.triggers.Add(entryRun);
+
     }
 
-    private void ReloadAmmunation()
-    {
-        onReload.Raise(this, "PATH_EVENT_RELOAD");
-    }
+
+    private void ReloadAmmunation() => onReload.Raise(this, "");
+
+    private void Run() => onRun.Raise(this, "");
+
+    private void StopRun() => onRunStop.Raise(this, "");
+
+    private void Jump() => onJump.Raise(this, "PATH_EVENT_JUMP");
 
     private void StopJump()
     {
-    }
-    private void Run()
-    {
-        onRun.Raise(this, "PATH_EVENT_RUN");
-    }
-    private void Jump()
-    {
-        onJump.Raise(this, "PATH_EVENT_JUMP");
+        Debug.Log("StopJump");
     }
     private void SwitchWeaponPre()
     {
@@ -127,9 +139,9 @@ public class GamePlayUI : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        onMove.Raise(this, joystick.Direction);
         if (isFiring) holdFireTime += Time.fixedDeltaTime;
         else holdFireTime = 0f;
-        onMove.Raise(this, joystick.Direction);
         if (isFiring && holdFireTime == 0) Fire();
         if (isFiring && holdFireTime > 0.05f) Fire();
     }
