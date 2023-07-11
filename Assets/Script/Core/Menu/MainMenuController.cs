@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -112,7 +112,7 @@ public class MainMenuController : MonoBehaviour
         weap.MoveSpeedMultiplier = 1.2f;
         weap.JumpSpeedpMultiplier = 1.5f;
         weap.WeaponType = WeaponEnum.EWeaponType.Rifle;
-        weap.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        weap.AmmoType = WeaponEnum.EAmmoType.Sharp;
         weap.WeaponState = WeaponEnum.EWeaponState.Idle;
         // fire mode have single and auto
         WeaponEnum.EFireMode[] fir = new WeaponEnum.EFireMode[2];
@@ -138,7 +138,7 @@ public class MainMenuController : MonoBehaviour
         hp416.MoveSpeedMultiplier = 1.2f;
         hp416.JumpSpeedpMultiplier = 1.5f;
         hp416.WeaponType = WeaponEnum.EWeaponType.Rifle;
-        hp416.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        hp416.AmmoType = WeaponEnum.EAmmoType.Sharp;
         hp416.WeaponState = WeaponEnum.EWeaponState.Idle;
         hp416.FireMode = fir;
 
@@ -159,7 +159,7 @@ public class MainMenuController : MonoBehaviour
         auc.MoveSpeedMultiplier = 1.2f;
         auc.JumpSpeedpMultiplier = 1.5f;
         auc.WeaponType = WeaponEnum.EWeaponType.Rifle;
-        auc.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        auc.AmmoType = WeaponEnum.EAmmoType.Sharp;
         auc.WeaponState = WeaponEnum.EWeaponState.Idle;
         auc.FireMode = fir;
 
@@ -190,3 +190,30 @@ public class MainMenuController : MonoBehaviour
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+/**
+    1. Thêm map custom mới vào file json 
+
+    - Tạo ra map custom
+    - Check xem tồn tại file json chưa (bool exists = SaveGame.Exists ( "simple.txt" );)
+    - Nếu chưa thì tạo ra file json mới
+    - Nếu có rồi thì load ra file json đó
+    - load được list map custom ra
+    - thêm map custom mới vào list
+    - lưu lại list map custom vào file json
+    - load lại list map custom từ file json
+    - kiểm tra xem map custom mới có trong list chưa
+    - nếu có thì load map custom đó ra
+    - nếu chưa thì thông báo lỗi
+
+ */

@@ -24,7 +24,7 @@ namespace Assets.Script.Core.Character
         private float attackSpeed;
         private float attackRange;
 
-        private CharacterState characterState;
+        private CharacterState state;
         private bool isInGround;
         private bool isAccelerating;
 
@@ -49,7 +49,7 @@ namespace Assets.Script.Core.Character
         public float AttackDamage { get => attackDamage; set => attackDamage = value; }
         public float AttackSpeed { get => attackSpeed; set => attackSpeed = value; }
         public float AttackRange { get => attackRange; set => attackRange = value; }
-        public CharacterState CharacterState { get => characterState; set => characterState = value; }
+        public CharacterState State { get => state; set => state = value; }
         public bool IsInGround { get => isInGround; set => isInGround = value; }
         public bool IsAccelerating { get => isAccelerating; set => isAccelerating = value; }
 
