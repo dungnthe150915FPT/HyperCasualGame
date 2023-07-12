@@ -35,14 +35,14 @@ public class MainMenuController : MonoBehaviour
         btnQuit.onClick.AddListener(QuitGame);
     }
 
-    private void QuitGame()
+    public void QuitGame()
     {
         throw new NotImplementedException();
     }
 
     public BaseWeapon[] listWeapon;
 
-    private void Setting()
+    public void Setting()
     {
         listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());
         foreach (BaseWeapon weap in listWeapon)
@@ -51,7 +51,7 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    private void LoadGame()
+    public void LoadGame()
     {
         weap = SaveGame.Load<BaseWeapon>("weapon", new BaseWeapon(), new SaveGameJsonSerializer());
         Debug.Log(weap.NameDisplay);
@@ -65,7 +65,7 @@ public class MainMenuController : MonoBehaviour
         Debug.Log(SaveGame.SavePath.ToString());
     }
 
-    private void NewGame()
+    public void NewGame()
     {
         GenerateConfig();
     }
@@ -94,7 +94,7 @@ public class MainMenuController : MonoBehaviour
        
     }
 
-    private void ContinueGame()
+    public void ContinueGame()
     {
         StartCoroutine(LoadSceneMode(CONST.SCENE_TEST));
     }
