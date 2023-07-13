@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,58 +34,85 @@ public class MainMenuController : MonoBehaviour
         btnSetting.onClick.AddListener(Setting);
         btnQuit.onClick.AddListener(QuitGame);
     }
-
     private void QuitGame()
     {
-        throw new NotImplementedException();
+        // stop game
+        Application.Quit();
     }
-
     public BaseWeapon[] listWeapon;
-
     private void Setting()
     {
-        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());
+        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
         foreach (BaseWeapon weap in listWeapon)
         {
             Debug.Log(weap.NameDisplay);
         }
     }
-
     private void LoadGame()
     {
+        BaseWeapon weap = new BaseWeapon();
         weap = SaveGame.Load<BaseWeapon>("weapon", new BaseWeapon(), new SaveGameJsonSerializer());
         Debug.Log(weap.NameDisplay);
+        // remove weapon have index 0 in listWeapon array
+
 
         FileInfo[] files = SaveGame.GetFiles();
         foreach (FileInfo file in files)
         {
-            Debug.Log("file: "+file.Name);
+            Debug.Log("file: " + file.Name);
         }
         // Log to path of saved game
         Debug.Log(SaveGame.SavePath.ToString());
     }
-
     private void NewGame()
     {
         GenerateConfig();
     }
-    public BaseWeapon weap;
     private void GenerateConfig()
     {
+        generateWeapons();
+        //generateInventory();
+    }
+
+    private Inventory inventory = new Inventory();
+    private void generateInventory()
+    {
+        List<BaseWeapon> newListWeapon = new List<BaseWeapon>();
+        Inventory inventory = new Inventory();
+        var jsonSerializer = new SaveGameJsonSerializer();
+        listWeapon = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
+        foreach (BaseWeapon weap in listWeapon)
+        {
+            Debug.Log(weap.NameDisplay);
+            newListWeapon.Add(weap);
+        }
+        inventory.Weapons = newListWeapon;
+
+        Debug.Log("newListWeapon: " + inventory.Weapons.Count);
+        SaveGame.Save<Inventory>("Weapo", inventory, new SaveGameJsonSerializer());
+
+    }
+
+    private void generateWeapons()
+    {
+        BaseWeapon weap = new BaseWeapon();
         weap.Id = "1";
         weap.NameDisplay = "ACM";
         weap.SpritePath = "Sprites/Weapons/Guns/AR/ACM";
+        weap.ShellExtractor = new Vector2(0.269f, 0.183f);
+        weap.MuzzleExtractor = new Vector2(1.22f, 0.203f);
+        weap.BulletSpeed = 1000f;
         weap.AttackDamage = 10;
         weap.FireRate = 0.1f;
-        weap.ReloadTime = 1;
+        weap.ReloadTime = 0.5f;
         weap.SpreadAim = 0.1f;
         weap.Mass = 1;
-        weap.AmmoTotal = 30;
-        weap.AmmoCurrent = 0;
+        weap.AmmoMax = 30;
+        weap.AmmoCurrent = 30;
         weap.MoveSpeedMultiplier = 1.2f;
         weap.JumpSpeedpMultiplier = 1.5f;
         weap.WeaponType = WeaponEnum.EWeaponType.Rifle;
-        weap.AmmoType = WeaponEnum.EAmmoType.Rifle;
+        weap.AmmoType = WeaponEnum.EAmmoType.Sharp;
         weap.WeaponState = WeaponEnum.EWeaponState.Idle;
         // fire mode have single and auto
         WeaponEnum.EFireMode[] fir = new WeaponEnum.EFireMode[2];
@@ -93,17 +120,61 @@ public class MainMenuController : MonoBehaviour
         fir[1] = WeaponEnum.EFireMode.Auto;
         weap.FireMode = fir;
         var jsonSerializer = new SaveGameJsonSerializer();
-        Debug.Log("weapon.name: " + weap.NameDisplay);
-        SaveGame.Save<BaseWeapon>("WeaponConfig", weap, jsonSerializer);
 
-       
+        BaseWeapon hp416 = new BaseWeapon();
+        hp416.Id = "2";
+        hp416.NameDisplay = "HP416";
+        hp416.SpritePath = "Sprites/Weapons/Guns/AR/HP416";
+        hp416.ShellExtractor = new Vector2(0.137f, 0.218f);
+        hp416.MuzzleExtractor = new Vector2(1.22f, 0.203f);
+        hp416.BulletSpeed = 1000f;
+        hp416.AttackDamage = 10;
+        hp416.FireRate = 0.1f;
+        hp416.ReloadTime = 1f;
+        hp416.SpreadAim = 0.1f;
+        hp416.Mass = 1;
+        hp416.AmmoMax = 30;
+        hp416.AmmoCurrent = 30;
+        hp416.MoveSpeedMultiplier = 1.2f;
+        hp416.JumpSpeedpMultiplier = 1.5f;
+        hp416.WeaponType = WeaponEnum.EWeaponType.Rifle;
+        hp416.AmmoType = WeaponEnum.EAmmoType.Sharp;
+        hp416.WeaponState = WeaponEnum.EWeaponState.Idle;
+        hp416.FireMode = fir;
+
+        BaseWeapon auc = new BaseWeapon();
+        auc.Id = "3";
+        auc.NameDisplay = "AUC";
+        auc.SpritePath = "Sprites/Weapons/Guns/AR/AUC";
+        auc.ShellExtractor = new Vector2(0.137f, 0.218f);
+        auc.MuzzleExtractor = new Vector2(0.967f, 0.211f);
+        auc.BulletSpeed = 1000f;
+        auc.AttackDamage = 10;
+        auc.FireRate = 0.1f;
+        auc.ReloadTime = 0.25f;
+        auc.SpreadAim = 0.1f;
+        auc.Mass = 1;
+        auc.AmmoMax = 30;
+        auc.AmmoCurrent = 30;
+        auc.MoveSpeedMultiplier = 1.2f;
+        auc.JumpSpeedpMultiplier = 1.5f;
+        auc.WeaponType = WeaponEnum.EWeaponType.Rifle;
+        auc.AmmoType = WeaponEnum.EAmmoType.Sharp;
+        auc.WeaponState = WeaponEnum.EWeaponState.Idle;
+        auc.FireMode = fir;
+
+        BaseWeapon[] listWeap = new BaseWeapon[3];
+        listWeap[0] = weap;
+        listWeap[1] = hp416;
+        listWeap[2] = auc;
+
+        SaveGame.Save<BaseWeapon[]>("WeaponConfigTest", listWeap, jsonSerializer);
     }
 
     private void ContinueGame()
     {
         StartCoroutine(LoadSceneMode(CONST.SCENE_TEST));
     }
-
     private IEnumerator LoadSceneMode(string nameScene)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nameScene);
@@ -119,3 +190,30 @@ public class MainMenuController : MonoBehaviour
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+/**
+    1. Thêm map custom mới vào file json 
+
+    - Tạo ra map custom
+    - Check xem tồn tại file json chưa (bool exists = SaveGame.Exists ( "simple.txt" );)
+    - Nếu chưa thì tạo ra file json mới
+    - Nếu có rồi thì load ra file json đó
+    - load được list map custom ra
+    - thêm map custom mới vào list
+    - lưu lại list map custom vào file json
+    - load lại list map custom từ file json
+    - kiểm tra xem map custom mới có trong list chưa
+    - nếu có thì load map custom đó ra
+    - nếu chưa thì thông báo lỗi
+
+ */

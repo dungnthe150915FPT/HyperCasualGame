@@ -5,18 +5,20 @@ TagManager:
   serializedVersion: 2
   tags:
   - Floor
-  - Dust
+  - Bullet
+  - Toxin
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Bullet
+  - Attackable
+  - Toxin
+  - Enemy
   - 
   - 
   - 
@@ -40,21 +42,6 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background3
-    uniqueID: 3840584877
-    locked: 0
-  - name: Background
-    uniqueID: 1514062827
-    locked: 0
-  - name: Background2
-    uniqueID: 1644167343
-    locked: 0
-  - name: Background1
-    uniqueID: 764256745
-    locked: 0
-  - name: Terrain
-    uniqueID: 538613843
-    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

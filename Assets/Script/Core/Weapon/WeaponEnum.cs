@@ -1,18 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
+[Serializable]
 public class WeaponEnum 
 {
     public enum EAmmoType
     {
         None,
-        Pistol,
-        SMG,
-        Rifle,
-        Shotgun,
-        Sniper,
-        Rocket,
-        Grenade
+        Circle,
+        Round,
+        Sharp
     }
     public enum EWeaponType
     {
