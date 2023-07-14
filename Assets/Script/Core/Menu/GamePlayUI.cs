@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 //using UnityEngine.UIElements;
@@ -17,6 +18,7 @@ public class GamePlayUI : MonoBehaviour
     public Button btnJump;
     public Button btnRun;
     public Button btnReload;
+    public Button btnPickup;
     private DynamicJoystick joystick;
 
     [Header("Text & Image")]
@@ -26,6 +28,9 @@ public class GamePlayUI : MonoBehaviour
     public Image imgWeap;
     public Image characterAvatar;
     public Image prgHealthbar;
+    public Image imageWeapSwitchNext;
+    public Image imageObjectPickup;
+    public TextMeshProUGUI textObjectPickup;
     public TextMeshProUGUI textHealth;
 
     private GameEvent onFire;
@@ -36,6 +41,7 @@ public class GamePlayUI : MonoBehaviour
     private GameEvent onRun;
     private GameEvent onRunStop;
     private GameEvent onReload;
+    private GameEvent onPickupObject;
 
     // EventTrigger
     private EventTrigger firee;
@@ -44,6 +50,26 @@ public class GamePlayUI : MonoBehaviour
 
     // Parameter
     private float holdFireTime = 0f;
+
+    //// test
+    //private Slider levelSlider;
+    //private TMP_Dropdown dropdown;
+    //public TextMeshProUGUI levelText;
+    //private void OnLevelSliderValueChanged()
+    //{
+    //    if (levelSlider != null)
+    //    {
+    //        Debug.Log(levelSlider.value);
+    //    }
+    //    // change level text follow slider value
+    //    levelText.text = levelSlider.value.ToString();
+    //    // change dropdow option to 1,2,3
+    //    dropdown.ClearOptions();
+    //    dropdown.AddOptions(new List<string>() { "1", "2", "3" });
+    //    // change sprite of option 1
+    //    dropdown.options[0].image = Resources.Load<Sprite>("Sprites/Weapon/Weapon_1");
+    //    dropdown.value.ToString();
+    //}
     void Start()
     {
         setupButtons();
@@ -64,12 +90,31 @@ public class GamePlayUI : MonoBehaviour
         onRun = Resources.Load<GameEvent>(CONST.PATH_EVENT_RUN);
         onRunStop = Resources.Load<GameEvent>(CONST.PATH_EVENT_RUN_STOP);
         onReload = Resources.Load<GameEvent>(CONST.PATH_EVENT_RELOAD);
+        onPickupObject = Resources.Load<GameEvent>(CONST.PATH_EVENT_PICKUP_OBJECT);
+        addEventListener(CONST.PATH_DEBUG_EVENT, OnSetDebugText);
+    }
+
+    private void OnSetDebugText(Component sender, object data)
+    {
+        textDebug.text = data.ToString();
+    }
+
+    private void addEventListener(string eventName, UnityAction<Component, object> callback)
+    {
+        GameEventListener eventListener = gameObject.AddComponent<GameEventListener>();
+        GameEvent onInputEvent = Resources.Load<GameEvent>(eventName);
+        eventListener.gameEvent = onInputEvent;
+        eventListener.OnGameEventListenerEnable();
+        CustomGameEvent eve = new CustomGameEvent();
+        eve.AddListener(callback);
+        eventListener.response = eve;
     }
 
     private void setupButtons()
     {
         btnSwitchWepPre.onClick.AddListener(SwitchWeaponPre);
         btnReload.onClick.AddListener(ReloadAmmunation);
+        btnPickup.onClick.AddListener(PickupObject);
 
         EventTriggerType pointUp = EventTriggerType.PointerUp;
         EventTriggerType pointDown = EventTriggerType.PointerDown;
@@ -106,6 +151,10 @@ public class GamePlayUI : MonoBehaviour
 
     }
 
+    private void PickupObject()
+    {
+        onPickupObject.Raise(this, "");
+    }
 
     private void ReloadAmmunation() => onReload.Raise(this, "");
 
@@ -117,7 +166,6 @@ public class GamePlayUI : MonoBehaviour
 
     private void StopJump()
     {
-        Debug.Log("StopJump");
     }
     private void SwitchWeaponPre()
     {
@@ -187,5 +235,21 @@ public class GamePlayUI : MonoBehaviour
         if (fillAmount > 0.5f) prgHealthbar.color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2);
         else prgHealthbar.color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2);
         textHealth.text = healthCurr.ToString() + "/" + healthTotal.ToString();
+    }
+
+    internal void changeWeapImageToSwitch(Sprite sprite)
+    {
+        imageWeapSwitchNext.sprite = sprite;
+    }
+
+    internal void changeObjectPickup(Sprite sprite, string name)
+    {
+        imageObjectPickup.sprite = sprite;
+        textObjectPickup.text = name;
+    }
+
+    internal void showObjectPickup(bool show)
+    {
+        btnPickup.gameObject.SetActive(show);
     }
 }

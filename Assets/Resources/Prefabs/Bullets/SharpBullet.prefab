@@ -48,9 +48,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8fda572c53c17a4a84fa1aa6b042923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletDamage: 50
   trigger: {fileID: 3042404607164670621}
   spriteRenderer: {fileID: 3555791287853094883}
-  rigidbody2D: {fileID: 3555791287853094880}
+  rigidbody2DBullet: {fileID: 0}
 --- !u!212 &3555791287853094883
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -118,7 +119,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 0.1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

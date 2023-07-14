@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &863393124308828024
+--- !u!1 &8261985827084660823
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,25 +8,25 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1484453994800819316}
-  - component: {fileID: 6460799262102313814}
-  - component: {fileID: 5102780999984309791}
-  - component: {fileID: 7419440437941041663}
-  - component: {fileID: 3278152649770984810}
+  - component: {fileID: 7740055354751814342}
+  - component: {fileID: 6656636267578552349}
+  - component: {fileID: 6031769012279745522}
+  - component: {fileID: 3732263525527393559}
+  - component: {fileID: 3442856654057449835}
   m_Layer: 8
-  m_Name: MagicToxin
+  m_Name: Magic
   m_TagString: Toxin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1484453994800819316
+--- !u!4 &7740055354751814342
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863393124308828024}
+  m_GameObject: {fileID: 8261985827084660823}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
@@ -35,31 +35,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6460799262102313814
+--- !u!114 &6656636267578552349
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863393124308828024}
+  m_GameObject: {fileID: 8261985827084660823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 433b8b8f3ef82734eacad35591255219, type: 3}
+  m_Script: {fileID: 11500000, guid: 7679a99e30fcf794e9e375a35a3d2739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider2d: {fileID: 0}
-  colliderTrigger: {fileID: 7419440437941041663}
-  rigidbody2D: {fileID: 3278152649770984810}
-  spriteRenderer: {fileID: 5102780999984309791}
-  damage: 50
+  damage: 20
   speed: 100
---- !u!212 &5102780999984309791
+--- !u!212 &6031769012279745522
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863393124308828024}
+  m_GameObject: {fileID: 8261985827084660823}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -99,36 +95,36 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.64, y: 0.64}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &7419440437941041663
-CircleCollider2D:
+--- !u!70 &3732263525527393559
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863393124308828024}
+  m_GameObject: {fileID: 8261985827084660823}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.075
---- !u!50 &3278152649770984810
+  m_Size: {x: 2.56, y: 2.56}
+  m_Direction: 0
+--- !u!50 &3442856654057449835
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863393124308828024}
+  m_GameObject: {fileID: 8261985827084660823}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0

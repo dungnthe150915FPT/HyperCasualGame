@@ -20,6 +20,10 @@ public class MainMenuController : MonoBehaviour
     private Button btnSetting;
     private Button btnQuit;
 
+    private Slider slider;
+    private Dropdown dropdown;
+    
+
     private void Start()
     {
         btnContinue = GameObject.Find("btnContinue").GetComponent<Button>();
@@ -102,7 +106,7 @@ public class MainMenuController : MonoBehaviour
         weap.ShellExtractor = new Vector2(0.269f, 0.183f);
         weap.MuzzleExtractor = new Vector2(1.22f, 0.203f);
         weap.BulletSpeed = 1000f;
-        weap.AttackDamage = 10;
+        weap.AttackDamage = 50f;
         weap.FireRate = 0.1f;
         weap.ReloadTime = 0.5f;
         weap.SpreadAim = 0.1f;

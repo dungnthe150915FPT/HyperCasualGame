@@ -6,20 +6,11 @@ using UnityEngine;
 
 public class ToxinController : MonoBehaviour
 {
-    private BaseToxin baseToxin;
-    public BaseToxin BaseToxin
-    {
-        get { return baseToxin; }
-        set { baseToxin = value; }
-    }
-
-    public Collider2D collider2d;
-    public Collider2D colliderTrigger;
-    public new Rigidbody2D rigidbody2D;
-    public SpriteRenderer spriteRenderer;
-
     public float damage;
     public float speed;
+
+    public float Damage { get => damage; set => damage = value; }
+    public float Speed { get => speed; set => speed = value; }
 
     internal virtual void Start()
     {
@@ -28,15 +19,12 @@ public class ToxinController : MonoBehaviour
 
     private void OnValidate()
     {
-        setupToxin();
+
     }
 
-    private void setupToxin()
+    private void OnBecameInvisible()
     {
-        BaseToxin newbaseToxin = new BaseToxin();
-        newbaseToxin.Speed = speed;
-        newbaseToxin.Damage = damage;
-        baseToxin = newbaseToxin;
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
