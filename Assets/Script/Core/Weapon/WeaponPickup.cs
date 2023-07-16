@@ -13,19 +13,27 @@ public class WeaponPickup : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     public string nameWeapon;
+    public bool isDefault = false;
     private BaseWeapon weaponStat;
 
-    private void OnValidate()
-    {
-    }
+    public BaseWeapon WeaponStat { get => weaponStat; set => weaponStat = value; }
 
     private void Start()
     {
-        weaponStat = getWeaponConfig(nameWeapon);
+        if(isDefault)
+        {
+            weaponStat = getWeaponConfigByDefault(nameWeapon);
+            setupWeapon(weaponStat);
+        }
+    }
+
+    public void setupByPlayer(BaseWeapon weapon)
+    {
+        weaponStat = weapon;
         setupWeapon(weaponStat);
     }
 
-    public BaseWeapon getWeaponConfig(string nameWeapon)
+    public BaseWeapon getWeaponConfigByDefault(string nameWeapon)
     {
         BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>(CONST.FILE_WEAPON_CONFIG, new BaseWeapon[0], new SaveGameJsonSerializer());
         foreach (BaseWeapon weapon in weapons)
@@ -42,9 +50,13 @@ public class WeaponPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == CONST.TAG_PLAYER)
+        if (collision.gameObject.tag == CONST.TAG_PLAYER)
         {
             collision.gameObject.GetComponent<CharacterController>().MeetObjectPickup(gameObject, weaponStat);
+        }
+        if (collision.gameObject.tag == CONST.TAG_FLOOR)
+        {
+            GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         }
     }
 
@@ -53,6 +65,14 @@ public class WeaponPickup : MonoBehaviour
         if (collision.gameObject.tag == CONST.TAG_PLAYER)
         {
             collision.gameObject.GetComponent<CharacterController>().ExitObjectPickup();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == CONST.TAG_PLAYER)
+        {
+            collision.gameObject.GetComponent<CharacterController>().MeetObjectPickup(gameObject, weaponStat);
         }
     }
 }

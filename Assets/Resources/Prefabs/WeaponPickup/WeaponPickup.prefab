@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 3514946982002376648}
   - component: {fileID: 8544452952811425362}
   - component: {fileID: 8371461994392347270}
-  m_Layer: 0
+  - component: {fileID: 2419878360438022352}
+  m_Layer: 10
   m_Name: WeaponPickup
-  m_TagString: Untagged
+  m_TagString: ObjectPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 8544452952811425362}
   nameWeapon: ACM
+  isDefault: 0
 --- !u!212 &8544452952811425362
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -89,7 +91,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 90c3a03f1a651294ca117f76bc08e03e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ce054b126e20e1449cbb04299b1db3d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -113,10 +115,10 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.3304179, y: 0.110139355}
+  m_Offset: {x: 0.30084682, y: 0.110139355}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.334791, y: 0.3898607}
+    pivot: {x: 0.32615265, y: 0.3877011}
     oldSize: {x: 2, y: 1}
     newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -124,5 +126,26 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 1}
+  m_Size: {x: 2.247322, y: 1.18818}
   m_EdgeRadius: 0
+--- !u!50 &2419878360438022352
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951865716809045582}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

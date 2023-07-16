@@ -13,7 +13,7 @@ public class Inventory
     private List<BaseWeapon> weapons;
     private Dictionary<EAmmoType, int> ammoPool;
     private Dictionary<EAmmoType, int> ammoCurrent;
-    private int numOfWeaponSlot = 4;
+    private int numOfWeaponSlot = 3;
     //void Start()
     //{
     //    weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());

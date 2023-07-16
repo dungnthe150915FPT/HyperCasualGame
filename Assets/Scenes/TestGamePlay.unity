@@ -205,6 +205,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: WeaponPickup (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1951865716809045582, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514946982002376648, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
+      propertyPath: isDefault
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6891289789254827666, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1052,6 +1060,10 @@ PrefabInstance:
       value: WeaponPickup
       objectReference: {fileID: 0}
     - target: {fileID: 3514946982002376648, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
+      propertyPath: isDefault
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3514946982002376648, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
       propertyPath: nameWeapon
       value: AUC
       objectReference: {fileID: 0}
@@ -1061,7 +1073,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6891289789254827666, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.3510847
+      value: 8.54
       objectReference: {fileID: 0}
     - target: {fileID: 6891289789254827666, guid: 625e85647337a9c418f0543a93ac6feb, type: 3}
       propertyPath: m_LocalPosition.y

@@ -42,6 +42,7 @@ public class CharacterController : MonoBehaviour
     private bool isFaceRight = true;
     private bool isReloading = false;
     private bool isRunning = false;
+    private bool isSwitchingWeapon = false;
     private float speedMultiplier = 1f;
     void Start()
     {
@@ -104,10 +105,7 @@ public class CharacterController : MonoBehaviour
 
     private void OnReload(Component sender, object data)
     {
-        if (getAmmoCurrWeap() <= 0)
-        {
-            return;
-        }
+        if (getAmmoCurrWeap() <= 0 || isReloading || currentWepController.WeaponStat.AmmoCurrent == currentWepController.WeaponStat.AmmoMax) return;
         isReloading = true;
         animator.SetFloat(CONST.ANIMATOR_CONTROLLER_PARAMETER_RELOAD_MULTIPLIER,
             currentWepController.WeaponStat.ReloadTime);
@@ -174,13 +172,14 @@ public class CharacterController : MonoBehaviour
     }
     private void stopMoving()
     {
-
+        if (isRunning) character.State = CharacterState.Idle;
+        else character.State = CharacterState.Idle;
+        AnimatedLibrary.SetParameter(character.State, animator);
     }
     private void startMoving(Vector2 vector)
     {
         onFaceSide(vector);
         setWeaponAngle(vector);
-
         rigidbodyCharacter.velocity = new Vector2(vector.x * character.MoveSpeed * speedMultiplier, rigidbodyCharacter.velocity.y);
         if (isRunning) character.State = CharacterState.Running;
         else character.State = CharacterState.Walking;
@@ -192,7 +191,7 @@ public class CharacterController : MonoBehaviour
     }
     private void OnFire(Component sender, object data)
     {
-        if (isReloading) return;
+        if (isReloading || isPickuping || isSwitchingWeapon) return;
         if (currentWepController.OnFire(FireFinish))
         {
             animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
@@ -208,9 +207,22 @@ public class CharacterController : MonoBehaviour
     }
     private void OnSwitchWeapon(Component sender, object data)
     {
+        if (isSwitchingWeapon) return;
+        StartCoroutine(OnBlankToAim(0.2f));
+    }
+
+    private IEnumerator OnBlankToAim(float v)
+    {
+        // stop animation current playing, then play blank to aim
+        isSwitchingWeapon = true;
+        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, false);
+        yield return new WaitForSeconds(v);
+        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, true);
         changeWeapon(getIndexToEquip());
         gameplayUI.changeWeapImageToSwitch(getImageToEquipNext());
+        isSwitchingWeapon = false;
     }
+
     private void addEventListener(string eventName, UnityAction<Component, object> callback)
     {
         GameEventListener eventListener = gameObject.AddComponent<GameEventListener>();
@@ -240,13 +252,11 @@ public class CharacterController : MonoBehaviour
         changeWeapon(1);
         gameplayUI.changeWeapImageToSwitch(getImageToEquipNext());
     }
-
     private Sprite getImageToEquipNext()
     {
         int index = getIndexToEquip();
         return Resources.Load<Sprite>(inventory.getWeapon(index).SpritePath);
     }
-
     private int getIndexToEquip()
     {
         return currentWeaponIndex + 1 >= inventory.getWeaponLength() ? 0 : currentWeaponIndex + 1;
@@ -265,13 +275,11 @@ public class CharacterController : MonoBehaviour
         updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
         updateImgWeap(currentWepController.WeaponStat.SpritePath);
     }
-
     private void updateImgWeap(string spritePath)
     {
         Sprite sprite = Resources.Load<Sprite>(spritePath);
         gameplayUI.updateWeaponImage(sprite);
     }
-
     private void setupInventory()
     {
         inventory = Inventory.Instance;
@@ -283,13 +291,11 @@ public class CharacterController : MonoBehaviour
         inventory.setAmmoCurrent(EAmmoType.Sharp, 888);
 
     }
-
     private void updateAmmoText(int ammoCurrent)
     {
         gameplayUI.updateAmmo(ammoCurrent,
             inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType));
     }
-
     private void setupVirtualCamera()
     {
         virtualCamera = GameObject.Find(CONST.VIRTUAL_CAMERA_NAME).GetComponent<CinemachineVirtualCamera>();
@@ -309,6 +315,7 @@ public class CharacterController : MonoBehaviour
     {
         previousVelocity = rigidbodyCharacter.velocity;
         prefab = animator.gameObject;
+        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, true);
     }
     private void setupCollider()
     {
@@ -455,16 +462,40 @@ public class CharacterController : MonoBehaviour
         if (weaponToPickup == null) return;
         if (inventory.getWeaponLength() < inventory.getNumOfWeaponSlot())
         {
+            StartCoroutine(OnSetPickupStatus(0.5f));
             inventory.addWeapon(weaponToPickup);
             gameplayUI.changeWeapImageToSwitch(getImageToEquipNext());
             Destroy(objectCollisionNow);
         }
         else if (inventory.getWeaponLength() == inventory.getNumOfWeaponSlot())
         {
+            spawnObjectPickup(currentWepController.WeaponStat);
             inventory.removeWeapon(currentWeaponIndex);
+            StartCoroutine(OnSetPickupStatus(1.3f));
             int index = inventory.addWeapon(weaponToPickup);
             changeWeapon(index);
             Destroy(objectCollisionNow);
         }
+    }
+
+    private IEnumerator OnSetPickupStatus(float v)
+    {
+        animator.SetTrigger("On_Pickup");
+        isPickuping = true;
+        yield return new WaitForSeconds(v);
+        isPickuping = false;
+    }
+
+    private bool isPickuping = false;
+
+    private void spawnObjectPickup(BaseWeapon weaponStat)
+    {
+        GameObject gameObject = Instantiate(Resources.Load<GameObject>(CONST.PREFAB_WEAPON_PICKUP_PATH));
+        gameObject.GetComponent<WeaponPickup>().setupByPlayer(weaponStat);
+        if (!isFaceRight) gameObject.transform.localScale = new Vector3(-1, 1, 1);
+        gameObject.transform.position = weaponHand.gameObject.transform.position;
+        gameObject.GetComponent<WeaponPickup>().nameWeapon = weaponStat.NameDisplay;
+        gameObject.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, -2), ForceMode2D.Impulse);
     }
 }
