@@ -6,19 +6,10 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    //private BaseBullet bulletStat;
-    //public BaseBullet BulletStat
-    //{
-    //    get { return bulletStat; }
-    //    set { bulletStat = value; }
-    //}
-
-    private float bulletDamage;
-
-    //public Collider2D boxCollider2D;
+    public float bulletDamage = 10;
     public Collider2D trigger;
     public SpriteRenderer spriteRenderer;
-    public new Rigidbody2D rigidbody2D;
+    public Rigidbody2D rigidbody2DBullet;
 
     private void Start()
     {
@@ -36,19 +27,10 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //if(collision.gameObject.tag == CONST.TAG_ENEMY)
-        //{
-        //    Debug.Log("Hit enemy");
-        //}
     }
 
-    internal float getBulletDamage()
+    private void OnBecameInvisible()
     {
-        return bulletDamage;
-    }
-
-    internal void setBulletDamage(float damage)
-    {
-        bulletDamage = damage;
+        Destroy(gameObject);
     }
 }

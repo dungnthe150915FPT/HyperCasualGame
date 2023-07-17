@@ -16,17 +16,14 @@ public class WeaponController : MonoBehaviour
         set { weaponStat = value; }
     }
 
-    private float timeJustFire = 0f;
+    private float timeJustFire;
 
     public delegate void TaskCallBack(Component sender, object result);
     public void setupWeapon(GameObject weaponHand)
     {
-
         muzzle = weaponHand.transform.Find(CONST.OBJECT_MUZZLE_EXTRACTOR).gameObject;
         shell = weaponHand.transform.Find(CONST.OBJECT_SHELL_EXTRACTOR).gameObject;
-
         setupBullet();
-
     }
 
     private void setupBullet()
@@ -43,8 +40,8 @@ public class WeaponController : MonoBehaviour
                 bullet = Resources.Load<GameObject>(CONST.PREFAB_SHARP_BULLET_PATH);
                 break;
         }
-        Debug.Log("Damage: " + weaponStat.AttackDamage);
-        bullet.GetComponent<BulletController>().setBulletDamage(weaponStat.AttackDamage);
+        //bullet.GetComponent<BulletController>().setBulletDamage(weaponStat.AttackDamage);
+        bullet.GetComponent<BulletController>().bulletDamage = weaponStat.AttackDamage;
     }
 
     private GameObject bullet;
@@ -58,8 +55,10 @@ public class WeaponController : MonoBehaviour
             GameObject newBullet = Instantiate(bullet);
             newBullet.transform.position = muzzle.transform.position;
             Vector2 direction = muzzle.transform.position - shell.transform.position;
+            var angle = Vector2.SignedAngle(Vector2.right, direction.normalized) - 90f;
+            newBullet.transform.rotation = Quaternion.Euler(0, 0, angle);
             newBullet.GetComponent<BulletController>().GetComponent<Rigidbody2D>().AddForce(direction * weaponStat.BulletSpeed);
-            Destroy(newBullet, 2f);
+            Destroy(newBullet, 10f);
             timeJustFire = 0f;
             setAmmo(1);
             callBackFireUpdateUI(taskCallBack);

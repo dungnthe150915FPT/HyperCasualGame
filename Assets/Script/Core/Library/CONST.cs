@@ -19,8 +19,8 @@ namespace Assets.Script.Core.Library
             , PREFAB_GAMEPLAY_UI = "Prefabs/UIGamePlay/CanvasGamePlay"
             , PREFAB_CIRCLE_BULLET_PATH = "Prefabs/Bullets/CircleBullet"
             , PREFAB_ROUND_BULLET_PATH = "Prefabs/Bullets/RoundBullet"
-            , PREFAB_SHARP_BULLET_PATH = "Prefabs/Bullets/SharpBullet";
-
+            , PREFAB_SHARP_BULLET_PATH = "Prefabs/Bullets/SharpBullet"
+            , PREFAB_WEAPON_PICKUP_PATH = "Prefabs/WeaponPickup/WeaponPickup";
 
         // Object name
         public static readonly string
@@ -38,10 +38,12 @@ namespace Assets.Script.Core.Library
             , PATH_EVENT_RUN = "Events/RunEvent"
             , PATH_EVENT_RUN_STOP = "Events/RunStopEvent"
             , PATH_EVENT_MOVE = "Events/MoveEvent"
-            , PATH_EVENT_RELOAD = "Events/ReloadEvent";
+            , PATH_EVENT_RELOAD = "Events/ReloadEvent"
+            , PATH_DEBUG_EVENT = "Events/DebugUIEvent"
+            , PATH_EVENT_PICKUP_OBJECT = "Events/PickupObjectEvent";
 
         // Config File JSON
-        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfig";
+        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfigTest";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";
@@ -59,7 +61,8 @@ namespace Assets.Script.Core.Library
 
         // Animator Controller Parameter
         public static readonly string
-            ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND = "isInGround"
+            ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING = "isAiming"
+            , ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND = "isInGround"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING = "isAccelerating"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_IDLE = "isIdle"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_WALKING = "isWalking"

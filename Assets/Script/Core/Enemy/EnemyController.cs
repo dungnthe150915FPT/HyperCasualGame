@@ -5,28 +5,29 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static WeaponEnum;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    private BaseEnemy enemy;
-    public new Collider2D collider;
-    public new Rigidbody2D rigidbody2D;
+    public Collider2D colliderEnemy;
+    public Rigidbody2D rigidbody2DEnemy;
     private GameObject prefab;
     public Animator animator;
-    public TextMeshPro textMeshPro;
+    public TextMeshPro tmp_name;
     public GameObject layerUI;
+    public Slider healthBar;
     public PolygonCollider2D playerTrigger;
-    public List<GameObject> toxinSpawnList;
-    public bool isRandomToxinSpawn = true;
+    public GameObject toxinSpawn;
+    public bool isSpawnToxin = false;
     public GameObject toxinExtractor;
     public GameObject movePointA;
     public GameObject movePointB;
+    private Image healthImageFill;
 
     public bool isRandomRun = false;
     public bool isToxinToPlayer = false;
 
-    // hide toxinDirection if isToxinToPlayer is false
     public Vector2 toxinDirection;
 
     private Vector3 positionPointA;
@@ -38,17 +39,18 @@ public class EnemyController : MonoBehaviour
     internal float moveSpeed;
     internal float maxHealth;
     internal float currentHealth;
+    internal string nameDisplay;
 
+    private GameEvent onLogDebug;
     private void Start()
     {
-        setupEnemy();
         setupToxin();
+        setupEnemyController();
         removePositionMarker();
         setupAction();
+        onLogDebug = Resources.Load<GameEvent>(CONST.PATH_DEBUG_EVENT);
     }
 
-
-    public virtual BaseEnemy Enemy { get => enemy; set => enemy = value; }
 
     private void OnValidate()
     {
@@ -64,7 +66,6 @@ public class EnemyController : MonoBehaviour
         Destroy(movePointA);
         Destroy(movePointB);
 
-        // if (positionPointA.x > positionPointB.x) replace position
         if (positionPointA.x > positionPointB.x)
         {
             Vector3 temp = positionPointA;
@@ -88,43 +89,23 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawWireSphere(positionPointB, 0.5f);
     }
 
-    public virtual void setupEnemy()
+    internal virtual void setupEnemyController()
     {
-        enemy = new BaseEnemy();
-        enemy.Id = "1";
-        enemy.NameDisplay = "Wizard";
-        enemy.MaxHealth = 100;
-        enemy.CurrentHealth = 100;
-        enemy.AttackDamage = 10;
-        enemy.AttackSpeed = 1;
-        enemy.AttackRange = 1;
-        enemy.MoveSpeed = 5;
-        enemy.JumpHeight = 1;
-
-        setupEnemyController(enemy);
-    }
-
-    internal virtual void setupEnemyController(BaseEnemy enemy)
-    {
-        moveSpeed = enemy.MoveSpeed;
-        maxHealth = enemy.MaxHealth;
-        currentHealth = enemy.CurrentHealth;
-
-        textMeshPro.text = enemy.NameDisplay;
+        healthImageFill = healthBar.transform.Find("Fill Area").Find("Fill").GetComponent<Image>();
+        healthBar.maxValue = maxHealth;
+        healthBar.minValue = 0;
+        tmp_name.text = nameDisplay;
+        UpdateHealth(0);
     }
 
     private Vector3 target = Vector3.zero;
     internal virtual Vector3 Target { get => target; set => target = value; }
     internal virtual void setupAction()
     {
-        //target = positionPointB;
-        // target is the point A or B nearest to the wizard
         if (MathF.Abs(positionPointA.x - transform.position.x) < MathF.Abs(positionPointB.x - transform.position.x))
             Target = positionPointA;
         else Target = positionPointB;
     }
-
-    // transform.rotation = Quaternion.Euler(0, 180, 0);
 
     internal virtual void FixedUpdate()
     {
@@ -141,8 +122,6 @@ public class EnemyController : MonoBehaviour
     {
         if (Target.x > transform.position.x)
         {
-            //Debug.Log("Move speed: " + enemy.MoveSpeed);
-            //Debug.Log("Crazy multiplier: " + crazyMultiplier);
             moveByVelocity(moveSpeed);
             if (!isFaceRight) rotateToRight(true);
         }
@@ -176,8 +155,6 @@ public class EnemyController : MonoBehaviour
 
     internal virtual bool isTargetReached()
     {
-        //return MathF.Abs(transform.position.x - target.x) < 1;
-        // random distance to reach target
         float distanceToReach = 1;
         if (isRandomRun) distanceToReach = UnityEngine.Random.Range(
                 MathF.Abs(positionPointA.x - positionPointB.x)
@@ -187,8 +164,7 @@ public class EnemyController : MonoBehaviour
 
     internal virtual void moveByVelocity(float x)
     {
-        //animator.SetBool("isRun", true);
-        rigidbody2D.velocity = new Vector2(x, rigidbody2D.velocity.y);
+        rigidbody2DEnemy.velocity = new Vector2(x, rigidbody2DEnemy.velocity.y);
     }
 
     internal virtual void OnTriggerEnter2D(Collider2D collision)
@@ -198,26 +174,49 @@ public class EnemyController : MonoBehaviour
 
     internal virtual void OnHitByBullet(GameObject bullet)
     {
-        float damage = bullet.GetComponent<BulletController>().getBulletDamage();
-        Debug.Log("DamagetoEnemy: " + damage);
-
-        currentHealth -= damage;
+        float damage = bullet.GetComponent<BulletController>().bulletDamage;
+        UpdateHealth(damage);
         Destroy(bullet);
         if (currentHealth <= 0) OnDie();
     }
 
+    internal virtual void playAnimation(string animation, string type)
+    {
+        switch (type)
+        {
+            case "trigger":
+                animator.SetTrigger(animation);
+                break;
+            case "bool":
+                animator.SetBool(animation, true);
+                break;
+        }
+
+    }
+
+    private void UpdateHealth(float damage)
+    {
+        healthBar.value = currentHealth = currentHealth -= damage;
+        float fillAmount = currentHealth / maxHealth;
+        Color color = new Color();
+        color.a = healthImageFill.color.a;
+        if (fillAmount > 0.5f) color = Color.Lerp(Color.yellow, Color.green, (fillAmount - 0.5f) * 2);
+        else color = Color.Lerp(Color.red, Color.yellow, fillAmount * 2);
+        healthImageFill.color = color;
+        if (currentHealth < 5) healthImageFill.enabled = false;
+    }
+
     internal virtual void OnDie()
     {
-        // set inactive game object
-        gameObject.SetActive(false);
-        // start coroutine to active game object after 5 seconds
-        StartCoroutine(OnDieCoroutine(5));
+        isAttacking = false;
+        StartCoroutine(OnDieCoroutine(2));
     }
 
     private IEnumerator OnDieCoroutine(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        gameObject.SetActive(true);
+        layerUI.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     public virtual void shouldAttackPlayer(Component sender, object data)
@@ -226,11 +225,14 @@ public class EnemyController : MonoBehaviour
         shouldRotateToPlayer(player);
         isAttacking = true;
         onAttackPlayer(player);
+        string log = gameObject.name + "  attack player  " + player.name;
+        onLogDebug.Raise(this, log);
     }
 
     public virtual void playerOutOfSight(Component sender, object data)
     {
         isAttacking = false;
+        onLogDebug.Raise(this, "");
     }
 
     public virtual void playerStayInSight(Component sender, object data)
@@ -296,41 +298,13 @@ public class EnemyController : MonoBehaviour
 
     internal virtual void setupToxin()
     {
-        if (toxinSpawnList.Count == 0)
-        {
-            Debug.Log("Toxin spawn list is empty");
-            return;
-        }
-        foreach (GameObject toxinSpawn in toxinSpawnList)
-        {
-            BaseToxin newbaseToxin = new BaseToxin();
-            newbaseToxin = toxinSpawn.GetComponent<ToxinController>().BaseToxin;
-            baseToxinToSpawnList.Add(newbaseToxin);
-        }
     }
-
-    internal int countToxinSpawned = -1;
-    internal List<BaseToxin> baseToxinToSpawnList = new List<BaseToxin>();
 
     internal virtual void spawnToxinToPlayer(GameObject player)
     {
-        if (toxinSpawnList.Count == 0) return;
-        int indexToSpawn = 0;
-        if (isRandomToxinSpawn) indexToSpawn = UnityEngine.Random.Range(0, toxinSpawnList.Count);
-        else
-        {
-            // spawn toxin in order of list
-            countToxinSpawned++;
-            if (countToxinSpawned >= toxinSpawnList.Count) countToxinSpawned = 0;
-            indexToSpawn = countToxinSpawned;
-
-        }
-        GameObject toxinToSpawn = toxinSpawnList[indexToSpawn];
-        BaseToxin baseToxin = baseToxinToSpawnList[indexToSpawn];
-        GameObject toxin = Instantiate(toxinToSpawn, toxinExtractor.transform.position, Quaternion.identity);
+        if (toxinSpawn == null || !isSpawnToxin) return;
+        GameObject toxin = Instantiate(toxinSpawn, toxinExtractor.transform.position, Quaternion.identity);
         toxin.transform.Rotate(0, 0, -90);
-        toxin.GetComponent<ToxinController>().BaseToxin = baseToxin;
-
         Vector2 direction = Vector2.zero;
         if (isToxinToPlayer)
         {
@@ -339,7 +313,7 @@ public class EnemyController : MonoBehaviour
             direction = gamep - magicp;
         }
         else direction = toxinDirection;
-        toxin.GetComponent<Rigidbody2D>().AddForce(direction * baseToxin.Speed);
+        toxin.GetComponent<Rigidbody2D>().AddForce(direction * toxin.GetComponent<ToxinController>().Speed);
         Destroy(toxin, 2f);
     }
 }

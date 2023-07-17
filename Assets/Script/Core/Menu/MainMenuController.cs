@@ -19,6 +19,12 @@ public class MainMenuController : MonoBehaviour
     private Button btnLoadGame;
     private Button btnSetting;
     private Button btnQuit;
+    private Button btnLogin;
+
+
+    private Slider slider;
+    private Dropdown dropdown;
+
 
     private void Start()
     {
@@ -27,13 +33,33 @@ public class MainMenuController : MonoBehaviour
         btnLoadGame = GameObject.Find("btnLoadGame").GetComponent<Button>();
         btnSetting = GameObject.Find("btnSettings").GetComponent<Button>();
         btnQuit = GameObject.Find("btnQuit").GetComponent<Button>();
+        btnLogin = GameObject.Find("btnLogin").GetComponent<Button>();
 
         btnContinue.onClick.AddListener(ContinueGame);
         btnNewGame.onClick.AddListener(NewGame);
         btnLoadGame.onClick.AddListener(LoadGame);
         btnSetting.onClick.AddListener(Setting);
         btnQuit.onClick.AddListener(QuitGame);
+        btnLogin.onClick.AddListener(Login);
     }
+
+    private void Login()
+    {
+        //AndroidJavaClass androidJava = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        //AndroidJavaObject currenActivity = androidJava.GetStatic<AndroidJavaObject>("currentActivity");
+        //AndroidJavaObject intent = new AndroidJavaObject("com.example.prmapplication", currenActivity, typeof(AndroidJavaObject));
+
+        //currenActivity.Call("startActivity", intent);
+
+        string clientPackage = "com.example.prmapplication";
+        //string clientActivity = "com.example.prmapplication.MainActivity";
+
+        AndroidNativeFunctions.StartApp(clientPackage, false);
+
+        // StartCoroutine(LoadSceneMode("demo"));
+
+    }
+
     private void QuitGame()
     {
         // stop game
@@ -102,7 +128,7 @@ public class MainMenuController : MonoBehaviour
         weap.ShellExtractor = new Vector2(0.269f, 0.183f);
         weap.MuzzleExtractor = new Vector2(1.22f, 0.203f);
         weap.BulletSpeed = 1000f;
-        weap.AttackDamage = 10;
+        weap.AttackDamage = 50f;
         weap.FireRate = 0.1f;
         weap.ReloadTime = 0.5f;
         weap.SpreadAim = 0.1f;
