@@ -5,6 +5,7 @@ using UnityEngine;
 public class Key : MonoBehaviour
 {
     public GameObject wall;
+    public Sprite newSprite;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +21,7 @@ public class Key : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            this.gameObject.SetActive(false);
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = newSprite;
             wall.gameObject.SetActive(false);
         }
     }

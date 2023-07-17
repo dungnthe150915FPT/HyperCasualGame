@@ -124,6 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4696489549521f742ad8a5f46342e521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wall: {fileID: 0}
+  newSprite: {fileID: 621934522, guid: 1ff621bafaff38f4ebcc1baf669ab883, type: 3}
 --- !u!1 &5989327172583723760
 GameObject:
   m_ObjectHideFlags: 0
