@@ -40,13 +40,30 @@ public class WeaponController : MonoBehaviour
                 bullet = Resources.Load<GameObject>(CONST.PREFAB_SHARP_BULLET_PATH);
                 break;
         }
-        //bullet.GetComponent<BulletController>().setBulletDamage(weaponStat.AttackDamage);
         bullet.GetComponent<BulletController>().bulletDamage = weaponStat.AttackDamage;
+
+        switch (weaponStat.WeaponType)
+        {
+            case EWeaponType.Rifle:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_RIFLE_FIRE_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
+            case EWeaponType.Shotgun:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_BIG_SHOT_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
+            case EWeaponType.Sniper:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_BIG_SHOT_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUNG_SNIPER_RELOAD_PATH);
+                break;
+        }
     }
 
     private GameObject bullet;
     private GameObject muzzle;
     private GameObject shell;
+    private AudioClip audioClipFire;
+    private AudioClip audioReload;
     public bool OnFire(TaskCallBack taskCallBack)
     {
         bool success = false;
@@ -61,6 +78,7 @@ public class WeaponController : MonoBehaviour
             Destroy(newBullet, 10f);
             timeJustFire = 0f;
             setAmmo(1);
+            AudioSource.PlayClipAtPoint(audioClipFire, transform.position);
             callBackFireUpdateUI(taskCallBack);
             success = true;
         }
@@ -84,6 +102,8 @@ public class WeaponController : MonoBehaviour
     {
         if (weaponStat.AmmoCurrent < weaponStat.AmmoMax)
         {
+            // play audio reload, faster 2x time
+            AudioSource.PlayClipAtPoint(audioReload, transform.position);
             int ammoClamp = Mathf.Clamp(ammoPool, 0, weaponStat.AmmoMax);
             int ammoNeed = weaponStat.AmmoMax - weaponStat.AmmoCurrent;
             int ammoReload = ammoClamp > ammoNeed ? ammoNeed : ammoClamp;

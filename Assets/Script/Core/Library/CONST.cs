@@ -42,8 +42,20 @@ namespace Assets.Script.Core.Library
             , PATH_DEBUG_EVENT = "Events/DebugUIEvent"
             , PATH_EVENT_PICKUP_OBJECT = "Events/PickupObjectEvent";
 
+
+        // SFX
+        public static readonly string
+            SOUND_RIFLE_FIRE_PATH = "SFX/gun-shot"
+            , SOUND_BIG_SHOT_PATH = "SFX/182273__martian__gun-for-ghose"
+            , SOUND_AUTO_SHOT_PATH = "SFX/274559__mrjohnweez__auto-machine-gun"
+            , SOUND_RELOAD_PATH = "SFX/363167__samsterbirdies__mag-reload"
+            , SOUND_COOKING_PATH = "SFX/pistol-gun-cocking"
+            , SOUNG_SNIPER_RELOAD_PATH = "SFX/276956__gfl7__awp-reload-sound"
+            , SOUND_NORMAL_RELOAD_PATH = "SFX/363167__samsterbirdies__mag-reload"
+            , SOUND_HEAL_PATH = "SFX/heal";
+
         // Config File JSON
-        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfigTest";
+        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfigTest2.json";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";

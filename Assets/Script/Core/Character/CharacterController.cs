@@ -39,11 +39,13 @@ public class CharacterController : MonoBehaviour
     public GameObject weaponHand;   // hand hold weapon
     public GameObject weaponShell;  // shell of weapon
     public GameObject weaponMuzzle; // muzzle of weapon
+    private AudioClip pickupWeaponAudio;
     private bool isFaceRight = true;
     private bool isReloading = false;
     private bool isRunning = false;
     private bool isSwitchingWeapon = false;
     private float speedMultiplier = 1f;
+
     void Start()
     {
         // Setup Gameplay UI 
@@ -61,6 +63,9 @@ public class CharacterController : MonoBehaviour
         // Setup Virtual Camera
         setupVirtualCamera();
 
+        // Setup Audio
+        setupAudio();
+
         // Setup Character Stats
         setupCharacterStats();
 
@@ -73,6 +78,11 @@ public class CharacterController : MonoBehaviour
         // Setup Events Listeners
         setupEventListeners();
 
+    }
+
+    private void setupAudio()
+    {
+        pickupWeaponAudio = Resources.Load<AudioClip>(CONST.SOUND_HEAL_PATH);
     }
 
     private void setupCharacterStats()
@@ -460,6 +470,7 @@ public class CharacterController : MonoBehaviour
     private void OnPickUpObject(Component sender, object data)
     {
         if (weaponToPickup == null) return;
+        AudioSource.PlayClipAtPoint(pickupWeaponAudio, transform.position);
         if (inventory.getWeaponLength() < inventory.getNumOfWeaponSlot())
         {
             StartCoroutine(OnSetPickupStatus(0.5f));
