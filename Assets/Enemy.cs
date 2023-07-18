@@ -5,21 +5,21 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Transform playerTransform; // Tham chiếu đến transform của PlayerController
-    public float initialMovementSpeed = 25f; // Tốc độ di chuyển ban đầu của enemy
-    public float fastMovementSpeed = 30f; // Tốc độ di chuyển khi enemy gần PlayerController
+    public float initialMovementSpeed = 5f; // Tốc độ di chuyển ban đầu của enemy
+    public float fastMovementSpeed = 10f; // Tốc độ di chuyển khi enemy gần PlayerController
     private Rigidbody2D rb; // Tham chiếu đến Rigidbody2D của enemy
 
     void Start()
     {
         // Tìm PlayerController game object và lấy transform component của nó
-        GameObject playerObject = GameObject.Find("PlayerController (1)");
+        GameObject playerObject = GameObject.Find("PlayerController");
         if (playerObject != null)
         {
             playerTransform = playerObject.transform;
         }
         else
         {
-            Debug.LogError("PlayerController (1) không tìm thấy trong scene!");
+            Debug.LogError("PlayerController không tìm thấy trong scene!");
         }
 
         // Lấy tham chiếu đến Rigidbody2D của enemy
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "PlayerController (1)")
+        if (collision.gameObject.name == "PlayerController")
         {
             Debug.Log("Sakura đã chết");
             Destroy(collision.gameObject);
