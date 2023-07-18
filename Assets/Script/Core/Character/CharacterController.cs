@@ -296,13 +296,13 @@ public class CharacterController : MonoBehaviour
     private void setupWeapon()
     {
         currentWepController = gameObject.AddComponent<WeaponController>();
-        BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
+        //BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
 
-        inventory.addWeapon(weapons[0]);
+        //inventory.addWeapon(weapons[0]);
         //inventory.addWeapon(weapons[1]);
         //inventory.addWeapon(weapons[2]);
 
-        changeWeapon(0);
+        //changeWeapon(0);
         gameplayUI.changeWeapImageToSwitch(getImageToEquipNext());
         if (inventory.getWeaponLength() == 0)
         {
@@ -313,8 +313,18 @@ public class CharacterController : MonoBehaviour
     }
     private Sprite getImageToEquipNext()
     {
-        int index = getIndexToEquip();
-        return Resources.Load<Sprite>(inventory.getWeapon(index).SpritePath);
+        Sprite spr;
+        try
+        {
+            int index = getIndexToEquip();
+            spr = Resources.Load<Sprite>(inventory.getWeapon(index).SpritePath);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            return Resources.Load<Sprite>(CONST.SPRITE_EMPTY_PATH);
+        }
+        return spr;
     }
     private int getIndexToEquip()
     {
@@ -451,7 +461,7 @@ public class CharacterController : MonoBehaviour
             character.IsInGround = true;
             animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
         }
-        
+
     }
 
     public void OnHitByToxin(GameObject toxin)
@@ -464,7 +474,11 @@ public class CharacterController : MonoBehaviour
 
     private void OnDeath()
     {
-
+        animator.SetTrigger("New Trigger");
+        ////pause game
+        ////show game over
+        Destroy(this.gameObject);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(CONST.SCENE_HOME1);
     }
 
     private IEnumerator OnChangeCharacterColor(float seconds)
