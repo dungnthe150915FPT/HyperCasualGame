@@ -33,4 +33,14 @@ public class BulletController : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.name == "Cow2")
+        {
+            Debug.Log("Enemy has died");
+
+            Destroy(collision.gameObject);
+        }
+    }
 }
