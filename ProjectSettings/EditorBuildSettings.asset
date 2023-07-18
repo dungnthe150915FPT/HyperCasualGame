@@ -11,16 +11,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestGamePlay.unity
     guid: 28265d016ceafda4ca28e30f9d6106e6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/TestSceneUI.unity
     guid: e7ef343cfe3bb2d4a8f6e8fb7d13a013
-  - enabled: 1
+  - enabled: 0
     path: Assets/AndroidNativeFunctions/demo/demo.unity
     guid: 696bf95a483037a41bbac3de0ab16a04
   - enabled: 1
     path: Assets/Scenes/Chapter1/House1Scene.unity
-    guid: 947948207f87f2e448fac01ae1514fa0
+    guid: 6e83522e71d8fc94bbe9cc19b1a34d48
   - enabled: 1
     path: Assets/Maps/First Level.unity
     guid: fc81a4bb18e806b4eb0ac60c0b987a61
+  - enabled: 1
+    path: Assets/Scenes/testscene.unity
+    guid: 83f5ad8d47b22be4a818b67e3afd7b75
   m_configObjects: {}

@@ -41,27 +41,18 @@ public class MainMenuController : MonoBehaviour
         btnSetting.onClick.AddListener(Setting);
         btnQuit.onClick.AddListener(QuitGame);
         btnLogin.onClick.AddListener(Login);
+
+        
     }
 
     private void Login()
     {
-        //AndroidJavaClass androidJava = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        //AndroidJavaObject currenActivity = androidJava.GetStatic<AndroidJavaObject>("currentActivity");
-        //AndroidJavaObject intent = new AndroidJavaObject("com.example.prmapplication", currenActivity, typeof(AndroidJavaObject));
-
-        //currenActivity.Call("startActivity", intent);
-
         string clientPackage = "com.example.prmapplication";
-        //string clientActivity = "com.example.prmapplication.MainActivity";
         AndroidNativeFunctions.StartApp(clientPackage, false);
-
-        // StartCoroutine(LoadSceneMode("demo"));
-
     }
 
     private void QuitGame()
     {
-        // stop game
         Application.Quit();
     }
     public BaseWeapon[] listWeapon;
@@ -92,6 +83,8 @@ public class MainMenuController : MonoBehaviour
     private void NewGame()
     {
         GenerateConfig();
+        StartCoroutine(LoadSceneMode(CONST.SCENE_HOME1));
+        //GenerateConfig();
     }
     private void GenerateConfig()
     {
@@ -108,7 +101,7 @@ public class MainMenuController : MonoBehaviour
 
     private void ContinueGame()
     {
-        StartCoroutine(LoadSceneMode(CONST.SCENE_TEST));
+        StartCoroutine(LoadSceneMode(CONST.SCENE_HOME1));
     }
     private IEnumerator LoadSceneMode(string nameScene)
     {
