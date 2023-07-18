@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 4886571737562190440}
   - component: {fileID: 938124183558448673}
   - component: {fileID: 5930457938296951334}
+  - component: {fileID: 4203579342443167507}
   m_Layer: 3
   m_Name: PlayerController
   m_TagString: Player
@@ -122,6 +123,14 @@ MonoBehaviour:
   weaponHand: {fileID: 6298407180331951031}
   weaponShell: {fileID: 514998369829672815}
   weaponMuzzle: {fileID: 3872254312983630806}
+  orthographicSize: 8
+  isVCamDefault: 0
+  virtualCamera: {fileID: 0}
+  moveSpeed: 10
+  jumpHeight: 50
+  maxHealth: 100
+  currentHealth: 100
+  speedMultiplier: 1
 --- !u!50 &4886571737562190440
 Rigidbody2D:
   serializedVersion: 4
@@ -134,10 +143,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
+  m_Mass: 2
+  m_LinearDrag: 2
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -198,6 +207,17 @@ PolygonCollider2D:
       - {x: -0.1359449, y: 0.1981655}
       - {x: -0.13594496, y: -0.19873565}
       - {x: 0.03297019, y: -0.19278625}
+--- !u!210 &4203579342443167507
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6666712158700143348}
+  m_Enabled: 1
+  m_SortingLayerID: -1819101283
+  m_SortingLayer: 1
+  m_SortingOrder: 0
 --- !u!1001 &1304364328086840075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -529,7 +549,8 @@ PrefabInstance:
       propertyPath: m_Bounds.m_Extent.y
       value: 0.399166
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2890272846558353420, guid: 09272551ae6963c429bb0fbeb7fb58d9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 09272551ae6963c429bb0fbeb7fb58d9, type: 3}
 --- !u!4 &4181108078631975684 stripped
 Transform:

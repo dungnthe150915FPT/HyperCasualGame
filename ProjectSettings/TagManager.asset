@@ -8,6 +8,10 @@ TagManager:
   - Bullet
   - Toxin
   - Enemy
+  - ObjectPickup
+  - Dust
+  - Ground
+  - Text
   layers:
   - Default
   - TransparentFX
@@ -19,7 +23,7 @@ TagManager:
   - Attackable
   - Toxin
   - Enemy
-  - 
+  - ObjectPickup
   - 
   - 
   - 
@@ -63,6 +67,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: 10
+  - name: Player
     uniqueID: 2475866013
+    locked: 0
+  - name: Bullet
+    uniqueID: 1350936645
     locked: 0
