@@ -56,6 +56,14 @@ public class WeaponController : MonoBehaviour
                 audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_BIG_SHOT_PATH);
                 audioReload = Resources.Load<AudioClip>(CONST.SOUNG_SNIPER_RELOAD_PATH);
                 break;
+            case EWeaponType.Pistol:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_RIFLE_FIRE_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
+            case EWeaponType.SMG:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_RIFLE_FIRE_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
         }
     }
 

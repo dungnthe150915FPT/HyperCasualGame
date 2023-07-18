@@ -54,11 +54,16 @@ namespace Assets.Script.Core.Library
             , SOUND_NORMAL_RELOAD_PATH = "SFX/363167__samsterbirdies__mag-reload"
             , SOUND_HEAL_PATH = "SFX/heal";
 
+        // Sprites
+        public static readonly string
+            SPRITE_EMPTY_PATH = "Sprites/Empty";
+
         // Config File JSON
         public static readonly string FILE_WEAPON_CONFIG = "WeaponConfigTest2.json";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";
+
         // Player Input Actionss
         public static readonly string
             PLAYER_INPUT_ACTIONS_PATH = "InputActionAssets/PlayerInputActions"
@@ -128,6 +133,7 @@ namespace Assets.Script.Core.Library
         public static readonly string
             SCENE_MAIN_MENU = "MainMenuScene"
             , SCENE_GAMEPLAY = "Gameplay"
-            , SCENE_TEST = "TestGamePlay";
+            , SCENE_TEST = "TestGamePlay"
+            , SCENE_HOME1 = "House1Scene";
     }
 }

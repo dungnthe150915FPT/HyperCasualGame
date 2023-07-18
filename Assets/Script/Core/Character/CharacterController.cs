@@ -17,6 +17,27 @@ using System.Reflection;
 
 public class CharacterController : MonoBehaviour
 {
+    // using Singleton Pattern
+    private static CharacterController _instance;
+    public static CharacterController Instance { get { return _instance; } }
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Debug.Log("Destroying duplicate CharacterController");
+            // move new character to old character position
+            this.transform.position = _instance.transform.position;
+            Destroy(this.gameObject);
+            GameObject.Find("CM vcam1Del").SetActive(false);
+        }
+        else
+        {
+            _instance = this;
+            Debug.Log("CharacterController created");
+        }
+    }
+
+
     // Unity Components
     private BaseCharacter character = new BaseCharacter();
     public BoxCollider2D colliderCharacter;
@@ -26,7 +47,6 @@ public class CharacterController : MonoBehaviour
     public SpriteRenderer weaponSpriteRenderer;
     public Animator animator;
     private Vector2 previousVelocity;
-    private CinemachineVirtualCamera virtualCamera;
     private GameObject gameplayUIObject;
     public List<SpriteRenderer> listSpriteBone = new List<SpriteRenderer>();
     public List<SpriteRenderer> listSpriteHit = new List<SpriteRenderer>();
@@ -35,7 +55,7 @@ public class CharacterController : MonoBehaviour
     private GamePlayUI gameplayUI;
     private Inventory inventory;
     private WeaponController currentWepController; // current weapon controller
-    private int currentWeaponIndex; // index of current weapon in inventory
+    private int currentWeaponIndex = -1; // index of current weapon in inventory
     public GameObject weaponHand;   // hand hold weapon
     public GameObject weaponShell;  // shell of weapon
     public GameObject weaponMuzzle; // muzzle of weapon
@@ -44,7 +64,18 @@ public class CharacterController : MonoBehaviour
     private bool isReloading = false;
     private bool isRunning = false;
     private bool isSwitchingWeapon = false;
-    private float speedMultiplier = 1f;
+
+    [Header("VCam")]
+    public float orthographicSize = 8f;
+    public bool isVCamDefault = false;
+    public CinemachineVirtualCamera virtualCamera;
+
+    [Header("Character Stats")]
+    public float moveSpeed = 10f;
+    public float jumpHeight = 50f;
+    public float maxHealth = 100f;
+    public float currentHealth = 100f;
+    public float speedMultiplier = 1f;
 
     void Start()
     {
@@ -78,6 +109,13 @@ public class CharacterController : MonoBehaviour
         // Setup Events Listeners
         setupEventListeners();
 
+        // Setup Position
+        setupPosition();
+
+    }
+
+    private void setupPosition()
+    {
     }
 
     private void setupAudio()
@@ -87,11 +125,10 @@ public class CharacterController : MonoBehaviour
 
     private void setupCharacterStats()
     {
-        character.MoveSpeed = 10f;
-        character.MaxHealth = 100f;
-        character.CurrentHealth = 100f;
-        character.JumpHeight = 50f;
-        speedMultiplier = 1f;
+        character.MoveSpeed = moveSpeed;
+        character.JumpHeight = jumpHeight;
+        character.MaxHealth = maxHealth;
+        character.CurrentHealth = currentHealth;
         updateHealth();
     }
 
@@ -115,7 +152,9 @@ public class CharacterController : MonoBehaviour
 
     private void OnReload(Component sender, object data)
     {
-        if (getAmmoCurrWeap() <= 0 || isReloading || currentWepController.WeaponStat.AmmoCurrent == currentWepController.WeaponStat.AmmoMax) return;
+        if (getAmmoCurrWeap() <= 0 || isReloading
+            || currentWepController.WeaponStat.AmmoCurrent == currentWepController.WeaponStat.AmmoMax
+            || currentWeaponIndex < 0) return;
         isReloading = true;
         animator.SetFloat(CONST.ANIMATOR_CONTROLLER_PARAMETER_RELOAD_MULTIPLIER,
             currentWepController.WeaponStat.ReloadTime);
@@ -141,6 +180,7 @@ public class CharacterController : MonoBehaviour
 
     private int getAmmoCurrWeap()
     {
+        if (currentWeaponIndex < 0) return 0;
         return inventory.getAmmoCurrent(currentWepController.WeaponStat.AmmoType);
     }
 
@@ -201,7 +241,7 @@ public class CharacterController : MonoBehaviour
     }
     private void OnFire(Component sender, object data)
     {
-        if (isReloading || isPickuping || isSwitchingWeapon) return;
+        if (isReloading || isPickuping || isSwitchingWeapon || currentWeaponIndex < 0) return;
         if (currentWepController.OnFire(FireFinish))
         {
             animator.SetTrigger(CONST.ANIMATOR_TRIGGER_FIRE_SINGLE);
@@ -249,6 +289,9 @@ public class CharacterController : MonoBehaviour
         gameplayUIObject = Instantiate(temp);
         gameplayUIObject.transform.SetParent(gameObject.transform);
         gameplayUI = gameplayUIObject.GetComponent<GamePlayUI>();
+
+        gameplayUI.updateWeaponImage(Resources.Load<Sprite>(CONST.SPRITE_EMPTY_PATH));
+        gameplayUI.updateAmmo(0, 0);
     }
     private void setupWeapon()
     {
@@ -256,11 +299,17 @@ public class CharacterController : MonoBehaviour
         BaseWeapon[] weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfigTest", new BaseWeapon[0], new SaveGameJsonSerializer());
 
         inventory.addWeapon(weapons[0]);
-        inventory.addWeapon(weapons[1]);
-        inventory.addWeapon(weapons[2]);
+        //inventory.addWeapon(weapons[1]);
+        //inventory.addWeapon(weapons[2]);
 
-        changeWeapon(1);
+        changeWeapon(0);
         gameplayUI.changeWeapImageToSwitch(getImageToEquipNext());
+        if (inventory.getWeaponLength() == 0)
+        {
+            animator.SetTrigger(CONST.ANIMATOR_TRIGGER_BLANK);
+            animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, false);
+            gameplayUI.changeWeapImageToSwitch(Resources.Load<Sprite>(CONST.SPRITE_EMPTY_PATH));
+        }
     }
     private Sprite getImageToEquipNext()
     {
@@ -284,6 +333,8 @@ public class CharacterController : MonoBehaviour
 
         updateAmmoText(currentWepController.WeaponStat.AmmoCurrent);
         updateImgWeap(currentWepController.WeaponStat.SpritePath);
+        animator.SetTrigger(CONST.ANIMATOR_TRIGGER_AIM);
+        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, true);
     }
     private void updateImgWeap(string spritePath)
     {
@@ -310,11 +361,10 @@ public class CharacterController : MonoBehaviour
     {
         virtualCamera = GameObject.Find(CONST.VIRTUAL_CAMERA_NAME).GetComponent<CinemachineVirtualCamera>();
         if (virtualCamera == null) Debug.Log("Virtual Camera not found. Creating new one.");
-
+        if (!isVCamDefault) return;
         virtualCamera.Follow = gameObject.transform;
         virtualCamera.m_Lens.Orthographic = true;
-        virtualCamera.m_Lens.OrthographicSize = 10f;
-        virtualCamera.m_Lens.OrthographicSize = 8f;
+        virtualCamera.m_Lens.OrthographicSize = orthographicSize;
         CinemachineFramingTransposer framingTrans = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         framingTrans.m_TrackedObjectOffset = new Vector3(5, 2, 0);
         framingTrans.m_XDamping = 0;
@@ -325,7 +375,6 @@ public class CharacterController : MonoBehaviour
     {
         previousVelocity = rigidbodyCharacter.velocity;
         prefab = animator.gameObject;
-        animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING, true);
     }
     private void setupCollider()
     {
@@ -395,12 +444,14 @@ public class CharacterController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Debug.Log(collision.gameObject.name + ": " + collision.gameObject.tag);
         if (collision.gameObject.tag == CONST.TAG_FLOOR)
         {
             animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_FALLING, false);
             character.IsInGround = true;
             animator.SetBool(CONST.ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND, true);
         }
+        
     }
 
     public void OnHitByToxin(GameObject toxin)
@@ -471,6 +522,14 @@ public class CharacterController : MonoBehaviour
     {
         if (weaponToPickup == null) return;
         AudioSource.PlayClipAtPoint(pickupWeaponAudio, transform.position);
+        if (inventory.getWeaponLength() == 0)
+        {
+            StartCoroutine(OnSetPickupStatus(0.5f));
+            int index = inventory.addWeapon(weaponToPickup);
+            changeWeapon(index);
+            Destroy(objectCollisionNow);
+        }
+        else
         if (inventory.getWeaponLength() < inventory.getNumOfWeaponSlot())
         {
             StartCoroutine(OnSetPickupStatus(0.5f));
