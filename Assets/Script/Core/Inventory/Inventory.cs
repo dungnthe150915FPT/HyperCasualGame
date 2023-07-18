@@ -13,6 +13,7 @@ public class Inventory
     private List<BaseWeapon> weapons;
     private Dictionary<EAmmoType, int> ammoPool;
     private Dictionary<EAmmoType, int> ammoCurrent;
+    private int numOfWeaponSlot = 3;
     //void Start()
     //{
     //    weapons = SaveGame.Load<BaseWeapon[]>("WeaponConfig", new BaseWeapon[0], new SaveGameJsonSerializer());
@@ -53,15 +54,18 @@ public class Inventory
         return weapons[Mathf.Clamp(index, 0, weapons.Count - 1)];
     }
 
-    public BaseWeapon addWeapon(BaseWeapon baseWeapon)
+    public int addWeapon(BaseWeapon baseWeapon)
     {
-        //Debug.Log("add weapon");
-        //Debug.Log("Length: " + weapons.Length);
-        
-        // add weapon to weapons list
         weapons.Add(baseWeapon);
 
-        return baseWeapon;
+        // return index of weapon just added
+        return weapons.Count - 1;
+        //return baseWeapon;
+    }
+
+    public void removeWeapon(int index)
+    {
+        weapons.RemoveAt(index);
     }
 
     // get length of weapons
@@ -89,5 +93,25 @@ public class Inventory
     public void setAmmoCurrent(EAmmoType ammoType, int value)
     {
         ammoCurrent[ammoType] = value;
+    }
+
+    public void addAmmoPool(EAmmoType ammoType, int value)
+    {
+        ammoPool[ammoType] += value;
+    }
+
+    public void addAmmoCurrent(EAmmoType ammoType, int value)
+    {
+        ammoCurrent[ammoType] += value;
+    }
+
+    public int getNumOfWeaponSlot()
+    {
+        return numOfWeaponSlot;
+    }
+
+    public void setNumOfWeaponSlot(int value)
+    {
+        numOfWeaponSlot = value;
     }
 }

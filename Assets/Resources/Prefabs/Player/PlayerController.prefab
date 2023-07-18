@@ -110,9 +110,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec7dccff3329a2c4691340c450f44a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 938124183558448673}
+  colliderCharacter: {fileID: 938124183558448673}
   triggerCollider: {fileID: 5930457938296951334}
-  rigidbody: {fileID: 4886571737562190440}
+  rigidbodyCharacter: {fileID: 4886571737562190440}
   weaponSpriteRenderer: {fileID: 5545132526620195632}
   animator: {fileID: 4181108078631975686}
   listSpriteBone: []
@@ -120,8 +120,8 @@ MonoBehaviour:
   - {fileID: 5664321039922260909}
   - {fileID: 6542522593568396824}
   weaponHand: {fileID: 6298407180331951031}
-  weaponShell: {fileID: 0}
-  weaponMuzzle: {fileID: 0}
+  weaponShell: {fileID: 514998369829672815}
+  weaponMuzzle: {fileID: 3872254312983630806}
 --- !u!50 &4886571737562190440
 Rigidbody2D:
   serializedVersion: 4
@@ -461,6 +461,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6840489362823026747, guid: 09272551ae6963c429bb0fbeb7fb58d9, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5e709cd96ee8eb54f8bbf1343eb41f34, type: 3}
     - target: {fileID: 6873983975885094574, guid: 09272551ae6963c429bb0fbeb7fb58d9, type: 3}
       propertyPath: m_Bounds.m_Center.x
       value: 0.00032511353

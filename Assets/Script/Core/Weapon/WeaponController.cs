@@ -16,17 +16,14 @@ public class WeaponController : MonoBehaviour
         set { weaponStat = value; }
     }
 
-    private float timeJustFire = 0f;
+    private float timeJustFire;
 
     public delegate void TaskCallBack(Component sender, object result);
     public void setupWeapon(GameObject weaponHand)
     {
-
         muzzle = weaponHand.transform.Find(CONST.OBJECT_MUZZLE_EXTRACTOR).gameObject;
         shell = weaponHand.transform.Find(CONST.OBJECT_SHELL_EXTRACTOR).gameObject;
-
         setupBullet();
-
     }
 
     private void setupBullet()
@@ -43,13 +40,30 @@ public class WeaponController : MonoBehaviour
                 bullet = Resources.Load<GameObject>(CONST.PREFAB_SHARP_BULLET_PATH);
                 break;
         }
-        Debug.Log("Damage: " + weaponStat.AttackDamage);
-        bullet.GetComponent<BulletController>().setBulletDamage(weaponStat.AttackDamage);
+        bullet.GetComponent<BulletController>().bulletDamage = weaponStat.AttackDamage;
+
+        switch (weaponStat.WeaponType)
+        {
+            case EWeaponType.Rifle:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_RIFLE_FIRE_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
+            case EWeaponType.Shotgun:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_BIG_SHOT_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUND_NORMAL_RELOAD_PATH);
+                break;
+            case EWeaponType.Sniper:
+                audioClipFire = Resources.Load<AudioClip>(CONST.SOUND_BIG_SHOT_PATH);
+                audioReload = Resources.Load<AudioClip>(CONST.SOUNG_SNIPER_RELOAD_PATH);
+                break;
+        }
     }
 
     private GameObject bullet;
     private GameObject muzzle;
     private GameObject shell;
+    private AudioClip audioClipFire;
+    private AudioClip audioReload;
     public bool OnFire(TaskCallBack taskCallBack)
     {
         bool success = false;
@@ -58,10 +72,13 @@ public class WeaponController : MonoBehaviour
             GameObject newBullet = Instantiate(bullet);
             newBullet.transform.position = muzzle.transform.position;
             Vector2 direction = muzzle.transform.position - shell.transform.position;
+            var angle = Vector2.SignedAngle(Vector2.right, direction.normalized) - 90f;
+            newBullet.transform.rotation = Quaternion.Euler(0, 0, angle);
             newBullet.GetComponent<BulletController>().GetComponent<Rigidbody2D>().AddForce(direction * weaponStat.BulletSpeed);
-            Destroy(newBullet, 2f);
+            Destroy(newBullet, 10f);
             timeJustFire = 0f;
             setAmmo(1);
+            AudioSource.PlayClipAtPoint(audioClipFire, transform.position);
             callBackFireUpdateUI(taskCallBack);
             success = true;
         }
@@ -85,6 +102,8 @@ public class WeaponController : MonoBehaviour
     {
         if (weaponStat.AmmoCurrent < weaponStat.AmmoMax)
         {
+            // play audio reload, faster 2x time
+            AudioSource.PlayClipAtPoint(audioReload, transform.position);
             int ammoClamp = Mathf.Clamp(ammoPool, 0, weaponStat.AmmoMax);
             int ammoNeed = weaponStat.AmmoMax - weaponStat.AmmoCurrent;
             int ammoReload = ammoClamp > ammoNeed ? ammoNeed : ammoClamp;

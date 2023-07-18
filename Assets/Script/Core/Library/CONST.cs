@@ -19,8 +19,8 @@ namespace Assets.Script.Core.Library
             , PREFAB_GAMEPLAY_UI = "Prefabs/UIGamePlay/CanvasGamePlay"
             , PREFAB_CIRCLE_BULLET_PATH = "Prefabs/Bullets/CircleBullet"
             , PREFAB_ROUND_BULLET_PATH = "Prefabs/Bullets/RoundBullet"
-            , PREFAB_SHARP_BULLET_PATH = "Prefabs/Bullets/SharpBullet";
-
+            , PREFAB_SHARP_BULLET_PATH = "Prefabs/Bullets/SharpBullet"
+            , PREFAB_WEAPON_PICKUP_PATH = "Prefabs/WeaponPickup/WeaponPickup";
 
         // Object name
         public static readonly string
@@ -38,10 +38,24 @@ namespace Assets.Script.Core.Library
             , PATH_EVENT_RUN = "Events/RunEvent"
             , PATH_EVENT_RUN_STOP = "Events/RunStopEvent"
             , PATH_EVENT_MOVE = "Events/MoveEvent"
-            , PATH_EVENT_RELOAD = "Events/ReloadEvent";
+            , PATH_EVENT_RELOAD = "Events/ReloadEvent"
+            , PATH_DEBUG_EVENT = "Events/DebugUIEvent"
+            , PATH_EVENT_PICKUP_OBJECT = "Events/PickupObjectEvent";
+
+
+        // SFX
+        public static readonly string
+            SOUND_RIFLE_FIRE_PATH = "SFX/gun-shot"
+            , SOUND_BIG_SHOT_PATH = "SFX/182273__martian__gun-for-ghose"
+            , SOUND_AUTO_SHOT_PATH = "SFX/274559__mrjohnweez__auto-machine-gun"
+            , SOUND_RELOAD_PATH = "SFX/363167__samsterbirdies__mag-reload"
+            , SOUND_COOKING_PATH = "SFX/pistol-gun-cocking"
+            , SOUNG_SNIPER_RELOAD_PATH = "SFX/276956__gfl7__awp-reload-sound"
+            , SOUND_NORMAL_RELOAD_PATH = "SFX/363167__samsterbirdies__mag-reload"
+            , SOUND_HEAL_PATH = "SFX/heal";
 
         // Config File JSON
-        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfig";
+        public static readonly string FILE_WEAPON_CONFIG = "WeaponConfigTest2.json";
 
         // Virtual Camera
         public static readonly string VIRTUAL_CAMERA_NAME = "CM vcam1";
@@ -59,7 +73,8 @@ namespace Assets.Script.Core.Library
 
         // Animator Controller Parameter
         public static readonly string
-            ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND = "isInGround"
+            ANIMATOR_CONTROLLER_PARAMETER_IS_AIMING = "isAiming"
+            , ANIMATOR_CONTROLLER_PARAMETER_IS_IN_GROUND = "isInGround"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_ACCELERATING = "isAccelerating"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_IDLE = "isIdle"
             , ANIMATOR_CONTROLLER_PARAMETER_IS_WALKING = "isWalking"

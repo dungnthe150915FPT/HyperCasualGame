@@ -42,6 +42,27 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background 2
+    uniqueID: 2777810209
+    locked: 0
+  - name: Background 1
+    uniqueID: 8276769
+    locked: 0
+  - name: Background
+    uniqueID: 1547010383
+    locked: 0
+  - name: BackgroundDetail
+    uniqueID: 962684963
+    locked: 0
+  - name: Spike
+    uniqueID: 3221971027
+    locked: 0
+  - name: Terrain
+    uniqueID: 3007783893
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: 10
+    uniqueID: 2475866013
     locked: 0

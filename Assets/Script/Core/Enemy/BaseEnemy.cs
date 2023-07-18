@@ -33,7 +33,5 @@ namespace Assets.Script.Core.Enemy
         public float AttackRange { get => attackRange; set => attackRange = value; }
         public float MoveSpeed { get => moveSpeed; set => moveSpeed = value; }
         public float JumpHeight { get => jumpHeight; set => jumpHeight = value; }
-
-
     }
 }
