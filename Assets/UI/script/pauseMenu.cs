@@ -1,3 +1,4 @@
+using Assets.Script.Core.Library;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Home()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(CONST.SCENE_MAIN_MENU2);
         Time.timeScale = 1;
     }
 
@@ -29,7 +30,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene((SceneManager.GetActiveScene().buildIndex));
+        SceneManager.LoadScene(CONST.SCENE_MAIN_MENU2);
         Time.timeScale = 1;
     }
 }
