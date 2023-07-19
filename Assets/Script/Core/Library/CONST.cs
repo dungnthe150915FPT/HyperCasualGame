@@ -132,6 +132,7 @@ namespace Assets.Script.Core.Library
         // scene name
         public static readonly string
             SCENE_MAIN_MENU = "MainMenuScene"
+            , SCENE_MAIN_MENU2 = "MainMenu2"
             , SCENE_GAMEPLAY = "Gameplay"
             , SCENE_TEST = "TestGamePlay"
             , SCENE_HOME1 = "House1Scene";
