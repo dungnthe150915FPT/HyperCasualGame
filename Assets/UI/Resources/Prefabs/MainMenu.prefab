@@ -624,8 +624,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5512249996772423449}
-        m_TargetAssemblyTypeName: UI.script.MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 6539227193221381898}
+        m_TargetAssemblyTypeName: mainMenu, Assembly-CSharp
         m_MethodName: Quitgame
         m_Mode: 1
         m_Arguments:
@@ -1340,7 +1340,7 @@ GameObject:
   - component: {fileID: 6331477146916088709}
   - component: {fileID: 6986809739915955274}
   - component: {fileID: 7812646430107366723}
-  - component: {fileID: 5512249996772423449}
+  - component: {fileID: 6539227193221381898}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5512249996772423449
+--- !u!114 &6539227193221381898
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1446,7 +1446,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7758791963405213064}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f51fa63edbc0f45ae55b924b721d6c, type: 3}
+  m_Script: {fileID: 11500000, guid: cbd1a1bb4ef4b754aa41c6b756e3b9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7920343823707866977
@@ -1727,8 +1727,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5512249996772423449}
-        m_TargetAssemblyTypeName: UI.script.MainMenu, Assembly-CSharp
+      - m_Target: {fileID: 6539227193221381898}
+        m_TargetAssemblyTypeName: mainMenu, Assembly-CSharp
         m_MethodName: Playgame
         m_Mode: 1
         m_Arguments:

@@ -197,8 +197,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4943165206106558184}
-        m_TargetAssemblyTypeName: UI.script.VictoryMenu, Assembly-CSharp
+      - m_Target: {fileID: 947695765958307093}
+        m_TargetAssemblyTypeName: VictoryMenu, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 661665096410948665}
   - component: {fileID: 4521281827852685500}
   - component: {fileID: 7125712811662497477}
-  - component: {fileID: 4943165206106558184}
+  - component: {fileID: 947695765958307093}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -469,7 +469,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4943165206106558184
+--- !u!114 &947695765958307093
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3454055816644651010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3213e542c8f5bb48b68ddb7b4d943cd, type: 3}
+  m_Script: {fileID: 11500000, guid: aaa9284d862287b4ebd903a324d89ecb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6809069593480903437
@@ -602,8 +602,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4943165206106558184}
-        m_TargetAssemblyTypeName: UI.script.VictoryMenu, Assembly-CSharp
+      - m_Target: {fileID: 947695765958307093}
+        m_TargetAssemblyTypeName: VictoryMenu, Assembly-CSharp
         m_MethodName: nextMap
         m_Mode: 1
         m_Arguments:
@@ -815,8 +815,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4943165206106558184}
-        m_TargetAssemblyTypeName: UI.script.VictoryMenu, Assembly-CSharp
+      - m_Target: {fileID: 947695765958307093}
+        m_TargetAssemblyTypeName: VictoryMenu, Assembly-CSharp
         m_MethodName: Home
         m_Mode: 1
         m_Arguments:

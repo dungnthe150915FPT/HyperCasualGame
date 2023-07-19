@@ -360,8 +360,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5451330621804253732}
-        m_TargetAssemblyTypeName: UI.script.DefeatMenu, Assembly-CSharp
+      - m_Target: {fileID: 5265474253207172796}
+        m_TargetAssemblyTypeName: DefeatMenu, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -601,8 +601,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5451330621804253732}
-        m_TargetAssemblyTypeName: UI.script.DefeatMenu, Assembly-CSharp
+      - m_Target: {fileID: 5265474253207172796}
+        m_TargetAssemblyTypeName: DefeatMenu, Assembly-CSharp
         m_MethodName: Home
         m_Mode: 1
         m_Arguments:
@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: 7578233313095784990}
   - component: {fileID: 5521594810565819836}
   - component: {fileID: 1020683474575884807}
-  - component: {fileID: 5451330621804253732}
+  - component: {fileID: 5265474253207172796}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -716,7 +716,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5451330621804253732
+--- !u!114 &5265474253207172796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -725,6 +725,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 9058020638578243902}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe4a4aadb8a3f1b499aaf2d1109efc87, type: 3}
+  m_Script: {fileID: 11500000, guid: 779b77e66c3b8dd42b11e17e9f9139a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -68,7 +68,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 54.71454, y: -45.000793}
+  m_AnchoredPosition: {x: 54.7146, y: -45.000793}
   m_SizeDelta: {x: 71.429016, y: 74.01669}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2435508302737604551
@@ -403,8 +403,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3588793722010163016}
-        m_TargetAssemblyTypeName: UI.script.PauseMenu, Assembly-CSharp
+      - m_Target: {fileID: 4191127659324919838}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: Home
         m_Mode: 1
         m_Arguments:
@@ -612,8 +612,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3588793722010163016}
-        m_TargetAssemblyTypeName: UI.script.PauseMenu, Assembly-CSharp
+      - m_Target: {fileID: 4191127659324919838}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -822,9 +822,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3588793722010163016}
-        m_TargetAssemblyTypeName: UI.script.PauseMenu, Assembly-CSharp
-        m_MethodName: Resume
+      - m_Target: {fileID: 4191127659324919838}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -964,7 +964,7 @@ GameObject:
   - component: {fileID: 6001225224895748406}
   - component: {fileID: 9189005547057992631}
   - component: {fileID: 1816907960783786448}
-  - component: {fileID: 3588793722010163016}
+  - component: {fileID: 4191127659324919838}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1055,7 +1055,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3588793722010163016
+--- !u!114 &4191127659324919838
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8954148261282801643}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0226532abe7b2e408cf64aaa8db5ce7, type: 3}
+  m_Script: {fileID: 11500000, guid: 73e242e602722bb4fbbdf900db9239f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 8181095828905966392}
