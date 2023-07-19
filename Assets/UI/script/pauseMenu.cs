@@ -9,14 +9,13 @@ namespace UI.script
         
         public void Pause()
         {
-            
             pauseMenu.SetActive(true);
             Time.timeScale = 0;
         }
 
         public void Home()
         {
-            SceneManager.LoadScene("UI/scene/MainMenu");
+            SceneManager.LoadScene("MainMenu");
             Time.timeScale = 1;
         }
 

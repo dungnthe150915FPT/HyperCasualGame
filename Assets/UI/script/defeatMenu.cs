@@ -1,14 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace UI.script
 {
     public class DefeatMenu : MonoBehaviour
     {
+        // Start is called before the first frame update
         public void Home()
         {
-            SceneManager.LoadScene("UI/scene/MainMenu");
+            SceneManager.LoadScene("MainMenu");
         }
         public void Restart()
         {
