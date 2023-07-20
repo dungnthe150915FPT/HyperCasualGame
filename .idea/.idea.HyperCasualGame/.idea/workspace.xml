@@ -5,28 +5,94 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95bc3ad5-fdca-4a5b-875d-23371d6b5155" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BayatGames/SaveGameFree/PressKit/Unity Package Key Images - Large-01.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BayatGames/SaveGameFree/PressKit/Unity Package Key Images - Large-01.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/BayatGames/SaveGameFree/PressKit/Unity Package Key Images - Small-01.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/BayatGames/SaveGameFree/PressKit/Unity Package Key Images - Small-01.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/CollegeStudent/Sprites/CollegeStudent Portrait.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CollegeStudent/Sprites/CollegeStudent Portrait.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Demo/AnimationController/Gun2.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Demo/AnimationController/Gun2.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Demo/Scenes/Gun.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Demo/Scenes/Gun.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Prefabs/001 Student 1 Character.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Generic Cute 2D/Tactical/Prefabs/001 Student 1 Character.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Sakura.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Sakura.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Menu/MainMenuScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Menu/MainMenuScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Script/Core/Menu/MainMenuController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Script/Core/Menu/MainMenuController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Materials/Ground - Logo Scene.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Examples &amp; Extras/Materials/Ground - Logo Scene.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Resources/Fonts &amp; Materials/LiberationSans SDF.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.HyperCasualGame/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_0.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_1.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_2.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_3.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/!_Moutain/Layer_4.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_0.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_1.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_2.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_3.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/2_Desert/Layer_4.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_0.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_1.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_2.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_3.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/3_Graveyard/Layer_4.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_0.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_1.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_2.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_3.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/4_Snow/Layer_4.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo/Script.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo/Script/BackgroundControl_0.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo/Script/BackgroundControl_0.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo/Script/ParallaxBackground_0.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/Demo/Script/ParallaxBackground_0.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/FullBG.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/FullBG/1_Mountain.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/MainMenu/src/FullBG/1_Mountain.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/DefeatMenu.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/DefeatMenu.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/MainMenu.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/MainMenu.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/PauseMenu.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/PauseMenu.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/VictoryMenu.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/Resources/Prefabs/VictoryMenu.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/scene.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/scene/New Scene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/scene/New Scene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/defeatMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/defeatMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/defeatMenu.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/defeatMenu.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/mainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/mainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/mainMenu.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/mainMenu.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/pauseMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/pauseMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/pauseMenu.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/pauseMenu.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/victoryMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/victoryMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UI/script/victoryMenu.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UI/script/victoryMenu.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/DefeatMenu.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/UI/script/VictoryMenu.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2Qv2JAlMOEpfKhl3uqXEDBBGECP" />
   <component name="ProjectViewState">
@@ -106,6 +172,12 @@
       <workItem from="1689182341509" duration="2410000" />
       <workItem from="1689186052362" duration="832000" />
       <workItem from="1689187015744" duration="21000" />
+      <workItem from="1689748151512" duration="448000" />
+      <workItem from="1689748839544" duration="39000" />
+      <workItem from="1689748905804" duration="185000" />
+      <workItem from="1689749125510" duration="29000" />
+      <workItem from="1689749246572" duration="783000" />
+      <workItem from="1689750090707" duration="1757000" />
     </task>
     <servers />
   </component>
