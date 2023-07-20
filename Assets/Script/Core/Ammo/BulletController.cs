@@ -38,7 +38,13 @@ public class BulletController : MonoBehaviour
     {
         if (collision.gameObject.name == "Cow2")
         {
-            Debug.Log("Enemy has died");
+            Debug.Log("Cow2 has died");
+
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.name == "Cow1")
+        {
+            Debug.Log("Cow1 has died");
 
             Destroy(collision.gameObject);
         }
