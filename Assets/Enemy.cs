@@ -5,8 +5,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public Transform playerTransform; // Tham chiếu đến transform của PlayerController
-    public float initialMovementSpeed = 5f; // Tốc độ di chuyển ban đầu của enemy
-    public float fastMovementSpeed = 10f; // Tốc độ di chuyển khi enemy gần PlayerController
+    public float initialMovementSpeed = 1f; // Tốc độ di chuyển ban đầu của enemy
+    public float fastMovementSpeed = 3f; // Tốc độ di chuyển khi enemy gần PlayerController
     private Rigidbody2D rb; // Tham chiếu đến Rigidbody2D của enemy
 
     void Start()
