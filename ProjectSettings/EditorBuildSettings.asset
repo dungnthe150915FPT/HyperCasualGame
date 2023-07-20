@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/TestGamePlay.unity
     guid: 28265d016ceafda4ca28e30f9d6106e6
   - enabled: 0
-    path: Assets/Scenes/TestSceneUI.unity
+    path: Assets/Scenes/TestSceneEnemy.unity
     guid: e7ef343cfe3bb2d4a8f6e8fb7d13a013
   - enabled: 0
     path: Assets/AndroidNativeFunctions/demo/demo.unity
